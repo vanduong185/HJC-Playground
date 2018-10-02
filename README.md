@@ -14,3 +14,6 @@
   - Quản lí project.
   - Chia sẻ project hoặc file cho người khác.
  
+ ## Các công nghệ sử dụng cho project:
+  - Back-end: NodeJS, ExpressJS, MySQL.
+  - Front-end: AngularJS, Boostrap, Code-mirror, template Metronic_v4.
