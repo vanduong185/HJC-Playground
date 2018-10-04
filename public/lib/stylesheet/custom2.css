@@ -1,0 +1,39 @@
+.editor {
+  margin-top: 10px;
+}
+
+.editor-treview {
+  min-height: 300px;
+  background-color: #fff;
+  box-shadow: 0 5px 8px rgb(185, 181, 181);
+}
+
+.editor-tabs {
+  min-height: 300px;
+  background-color: #fff;
+  box-shadow: 0 5px 8px rgb(185, 181, 181);
+}
+
+.result-iframe {
+  min-height: 400px;
+  width: 100%;
+  background-color: #fff;
+}
+
+#result-iframe {
+  border-style: none !important;
+}
+
+.menubar-center {
+  position: relative;
+  line-height: 69px !important;
+  padding: 0 10px !important;
+}
+
+.padding-left-30px {
+  padding-left: 30px;
+}
+
+.hjc-box-shadow {
+  box-shadow: 0 3px 5px rgb(185, 181, 181) !important;
+}
