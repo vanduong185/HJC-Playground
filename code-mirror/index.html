@@ -24,8 +24,6 @@
   }
 
   #codeeditor {
-    height: 50%;
-    width:100%;
     display:inline-block;
     padding-bottom: 20px;
   }
@@ -41,7 +39,7 @@
 </head>
 <body ng-app="demoApp">
   <div ng-controller="GetCode">
-    <textarea id="codeeditor"></textarea>
+    <div id="codeeditor"></div>
   </div>
 
   <iframe id="iframe">
@@ -49,7 +47,7 @@
 
   <script type="text/javascript">
 
-    var editor = CodeMirror.fromTextArea(document.getElementById("codeeditor"), {
+    var editor = CodeMirror(document.getElementById("codeeditor"), {
       value: "<p> Anh Duong dep trai </p> \n",
       mode: "text/html",
       theme: "monokai",
