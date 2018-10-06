@@ -1,26 +1,12 @@
 <div class="row widget-row editor">
-    <div class="col-md-3 col-sm-3 margin-bottom-20">
+    <div class="col-sm-3 col-md-3 margin-bottom-20">
         <div class="editor-treview">
             <div id="tree_1" class="tree-demo">
-                <ul>
-                    <li>Root node 1
-                        <ul>
-                            <li data-jstree='{ "selected" : true }'>
-                                <a href="javascript:;"> Initially selected </a>
-                            </li>
-                            <li>
-                                <a href="javascript:;"> file2 </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li data-jstree='{ "type" : "file" }'>
-                        <a href="#"> Clickanle link node </a>
-                    </li>
-                </ul>
+                
             </div>
         </div>
     </div>
-    <div class="col-md-9 col-sm-9 margin-bottom-20">
+    <div class="col-sm-9 col-md-9 margin-bottom-20">
         <div class="editor-tabs">
             <div id="codeeditor"></div>
         </div>
@@ -31,37 +17,3 @@
         <iframe id="result-iframe" class="result-iframe"></iframe>
     </div>
 </div>
-
-<script type="text/javascript">
-    var handleSample1 = function () {
-        // $('#tree_1').jstree({
-        //     "core" : {
-        //         "themes" : {
-        //             "responsive": false
-        //         }            
-        //     }
-        // });
-    
-        var tree = angular.element(document.getElementById("tree_1")).jstree ({
-          "core" : {
-            "theme" : {
-              "responsive" : false
-            }
-          }
-        });
-    
-        // handle link clicks in tree nodes(support target="_blank" as well)
-        // $('#tree_1').on('select_node.jstree', function(e,data) { 
-        //     var link = $('#' + data.selected).find('a');
-        //     if (link.attr("href") != "#" && link.attr("href") != "javascript:;" && link.attr("href") != "") {
-        //         if (link.attr("target") == "_blank") {
-        //             link.attr("href").target = "_blank";
-        //         }
-        //         document.location.href = link.attr("href");
-        //         return false;
-        //     }
-        // });
-      }
-        
-      handleSample1();
-</script>

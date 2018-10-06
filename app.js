@@ -1,21 +1,14 @@
 var express = require("express");
-var app = express();
-var router = express.Router();
-var path = __dirname + '/public/views/';
+var fs = require('fs');
+var path = require('path');
 
-// router.use(function(req, res, next) {
-//   console.log("/" + req.method);
-//   next();
-// });
+var app = express();
+
+app.use(express.static(__dirname + "/public"));
 
 app.get("/",function(req,res){
-  res.sendFile(path + "index.html");
+  res.sendFile( __dirname + "/public/views/index.html");
 });
-
-// router.get("/hello",function(req,res){
-//   res.sendFile(path + "hello_angular.html");
-// });
-app.use(express.static(__dirname + "/public"));
 
 app.get("/users",function(req,res){
   var person1 = {
@@ -37,13 +30,37 @@ app.get("/users",function(req,res){
   res.json(listUser);
 });
 
-// router.get("/users", function(req, res) {
-//   res.sendFile("views/users.html");
-// });
+app.get("/playground", function(req,res) {
+  var username = 'Duongnv';
+  var user_dir = './data/' + username;
+  
+  res.json(parseDirectory(user_dir));
+});
 
-// app.use("*",function(req,res){
-//   res.sendFile(path + "404.html");
-// });
+function parseDirectory(filename) {
+  var stats = fs.lstatSync(filename);
+  var info = {
+    path: filename,
+    text: path.basename(filename)
+  };
+
+  if (stats.isDirectory()) {
+    info.type = "folder";
+    info.children = fs.readdirSync(filename).map(function(child) {
+        return parseDirectory(filename + '/' + child);
+    });
+  } else {
+    info.type = "file";
+    if (fs.readFileSync(filename).toString().length == 0) {
+      info.data = " ";
+    }
+    else {
+      info.data = fs.readFileSync(filename).toString();
+    }
+  }
+
+  return info;
+}
 
 app.listen(8081, function () {
   console.log('Example app listening on port 8081!');
