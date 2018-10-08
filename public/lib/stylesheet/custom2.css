@@ -20,6 +20,7 @@
   min-height: 400px;
   width: 100%;
   background-color: #fff;
+  border-style: none !important;
 }
 
 #result-iframe {
@@ -38,4 +39,20 @@
 
 .hjc-box-shadow {
   box-shadow: 0 3px 5px rgb(185, 181, 181) !important;
+}
+
+.orange {
+  color: #fb821b;
+}
+
+.blue {
+  color: #30b6d4;
+}
+
+.red {
+  color: #f51c1c;
+}
+
+.gray {
+  color: #848282;
 }
