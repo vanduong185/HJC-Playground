@@ -42,19 +42,21 @@ myApp.config(function($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/home');
 });
 
-myApp.controller('UserController', ['$scope', '$http', function($scope, $http){
+myApp.controller('UserController', ['$scope', '$http', function($scope, $http) {
   $http.get('/users').success(function(response) {
     console.log("got response");
     $scope.listPerson = response;
   });
 }]);
 
-myApp.controller('EditorController', ['$scope', '$http', function($scope, $http){
+myApp.controller('EditorController', ['$scope', '$http', function($scope, $http) {
   $http.get('/playground').success(function(response) {
-    console.log("got response");
-    console.log(response);
+
+    var username = response.text;
+
+    // initialize editor with CodeMirror plugin
     var editor = CodeMirror(document.getElementById("codeeditor"), {
-      mode: "text/html",
+      mode: "html",
       theme: "neo",
       tabSize: 2,
       lineNumbers: true,
@@ -62,81 +64,94 @@ myApp.controller('EditorController', ['$scope', '$http', function($scope, $http)
       matchBrackets: true,
       extraKeys: {"Ctrl-Space": "autocomplete"}
     });
-  
-    editor.on("change", function () {
-      var text = editor.getValue();
-      var idoc = document.getElementById('result-iframe').contentWindow.document;
-      idoc.open();
-      idoc.write(text);
-      idoc.close();
+
+    // initialize treeview with jsTree plugin
+    var tree = angular.element(document.getElementById("tree_1")).jstree ({
+      'core' : {
+          'theme' : {
+          'responsive' : false
+          },
+          'data': response
+      },
+      'types' : {
+          'default': {icon: "fa fa-folder gray icon-lg"},
+          'file': {icon: "fa fa-file icon-state-warning icon-lg"},
+          'file-html' : {icon: "fa fa-html5 orange icon-lg"},
+          'file-css' : {icon: "fa fa-css3 blue icon-lg"},
+          'file-js' : {icon: "fa fa-code red icon-lg"}
+      },
+      'plugins':['types']
     });
-  
-    $scope.showCode = function() {
-      var text1 = editor.getValue();
-      console.log(text1);
-    }
 
-    var showTreeView = function () {
+    // initialize result iframe 
+    angular.element(document.getElementById('result-iframe'))[0].src = '../data/' + username + '/index.html';
 
-      project_data = [
-          {
-              '1' : [{'1.1' : [{'1.1.1': []}]}, {'1.2': []} ]
-          },
-          {
-              '2' : [{'2.1' : []}, {'2.2' : []} ]
+    // fire event when select file on tree view, set code of file for editor 
+    var selected_file = {};
+    angular.element(document.getElementById('tree_1')).on('select_node.jstree', function(e, data) {
+      var node = data.node;
+      if (node.original.type != "folder"){
+        switch (node.original.type) {
+          case "file-html" : {
+            editor.setOption("mode", "htmlmixed");
+            break;
           }
-      ]; 
-      
-      tree_data = [{
-          text: "root",
-          children: []
-      }];
-
-      var convert_tree_data = function(data, tree_data) {
-          
-          for (var i=0; i< data.length; i++)
-          {
-              parent = Object.keys(data[i])[0];
-              if (Object.values(data[i])[0].length > 0) {
-                  tmp = [{ 
-                      text: parent,
-                      children: []
-                  }]
-              }
-              else {
-                  tmp = [{ 
-                      text: parent,
-                      children: [],
-                      icon: "fa fa-file icon-state-warning icon-lg"
-                  }]
-              }
-              tree_data[0].children.push(tmp[0]);
-              convert_tree_data(Object.values(data[i])[0], tmp);
+          case "file-css" : {
+            editor.setOption("mode", "css");
+            break;
           }
-          return tree_data;
+          case "file-js" : {
+            editor.setOption("mode", "javascript");
+            break;
+          }
+          case "file" : {
+            editor.setOption("mode", "text/plain");
+            break;
+          }
+        }
+        selected_file.path = node.original.path
+        selected_file.id = node.id;
+        editor.setValue(node.original.content);
       }
+    });
 
-      var tree = angular.element(document.getElementById("tree_1")).jstree ({
-          'core' : {
-              'theme' : {
-              'responsive' : false
-              },
-              'data': response
-          },
-          'types' : {
-              'default': {icon: "fa fa-folder icon-state-warning icon-lg"},
-              'file': {icon: "fa fa-file icon-state-warning icon-lg"}
-          },
-          'plugins':['types']
+    // fire event when coding with editor
+    var time_out ;
+    editor.on("change", function () {
+      if (time_out != null) {
+        clearTimeout(time_out);
+      } 
+      time_out = setTimeout(function() {
+        var text = editor.getValue();
+
+        if (angular.element(
+          document.getElementById("tree_1")
+          ).jstree(true)._model.data[selected_file.id].original.content != text) {
+
+          var data_change = {
+            username: username,
+            file_path: selected_file.path,
+            content: text
+          }
+
+          angular.element(
+            document.getElementById("tree_1")
+          ).jstree(true)._model.data[selected_file.id].original.content = text;
           
-      });
-
-      angular.element(document.getElementById('tree_1')).on('select_node.jstree', function(e, data) {
-        console.log(data);
-        editor.setValue(data.node.data);
-      });
-    };
-      
-    showTreeView();
+          $http({
+            method: "POST",
+            url: '/playground',
+            data: data_change,
+            headers: { 'Content-Type': 'application/json'}
+          }).then(function Success(res) {
+            setTimeout(function(){
+              angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
+            }, 1000) //set timeout for reloading iframe
+          }, function Error(res) {
+            alert(res);
+          });
+        }
+      }, 3000) // set timeout 2 second
+    });    
   });
 }]);
