@@ -68,6 +68,7 @@ myApp.controller('EditorController', ['$scope', '$http', function($scope, $http)
     // initialize treeview with jsTree plugin
     var tree = angular.element(document.getElementById("tree_1")).jstree ({
       'core' : {
+          'check_callback': true,
           'theme' : {
           'responsive' : false
           },
@@ -86,8 +87,9 @@ myApp.controller('EditorController', ['$scope', '$http', function($scope, $http)
     // initialize result iframe 
     angular.element(document.getElementById('result-iframe'))[0].src = '../data/' + username + '/index.html';
 
-    // fire event when select file on tree view, set code of file for editor 
+    // fire event when select file or folder on tree view, set code of file for editor 
     var selected_file = {};
+    var selected_folder = {};
     angular.element(document.getElementById('tree_1')).on('select_node.jstree', function(e, data) {
       var node = data.node;
       if (node.original.type != "folder"){
@@ -111,7 +113,13 @@ myApp.controller('EditorController', ['$scope', '$http', function($scope, $http)
         }
         selected_file.path = node.original.path
         selected_file.id = node.id;
+        selected_folder = null;
         editor.setValue(node.original.content);
+      }
+      else {
+        selected_folder = {};
+        selected_folder.path = node.original.path;
+        selected_folder.id = node.id;
       }
     });
 
@@ -146,12 +154,37 @@ myApp.controller('EditorController', ['$scope', '$http', function($scope, $http)
           }).then(function Success(res) {
             setTimeout(function(){
               angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
-            }, 1000) //set timeout for reloading iframe
+            }, 500) //set timeout for reloading iframe
           }, function Error(res) {
             alert(res);
           });
         }
       }, 3000) // set timeout 2 second
-    });    
+    });
+
+    //fire event create a file
+    angular.element(document.getElementById('tree_1')).on('create_node.jstree', function(e, data) {
+      console.log('saved');;
+    });
+    
+    $scope.newFile = function() {
+      if (selected_folder)
+      {
+        console.log(selected_folder);
+        var nodeFolder = angular.element(document.getElementById(selected_folder.id + '_anchor'));
+        var div_input = angular.element('<div class="input-group padding-top-bottom-5px margin-left-24px" id="div-input-newfile"><input type="text" class="form-control input-height"  id="input-newfile" placeholder="new file"></input></div>');
+        div_input.insertAfter(nodeFolder);
+        var disable_input = document.addEventListener("mouseup", function(event) {
+          div_input = document.getElementById("div-input-newfile");
+          if (div_input && $(event.target).is("#input-newfile") == false) {
+            div_input.remove();
+          }
+        });
+      }
+      // angular.element(document.getElementById('tree_1')).jstree(
+      //   "create_node", selected_folder.id, { "text": "new.css", "type": "file-css"}, "last", function() {
+      //     alert("done");
+      //   });
+    }
   });
 }]);

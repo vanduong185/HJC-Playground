@@ -34,7 +34,7 @@ app.get("/users",function(req,res){
 });
 
 app.get("/playground", function(req,res) {
-  var username = 'DuongNguyen';
+  var username = 'DuongPro';
   var user_dir = './public/data/' + username;
   
   res.json(parseDirectory(user_dir));
