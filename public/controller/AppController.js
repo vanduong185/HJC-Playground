@@ -172,7 +172,7 @@ myApp.controller('EditorController', ['$scope', '$http', function($scope, $http)
       {
         console.log(selected_folder);
         var nodeFolder = angular.element(document.getElementById(selected_folder.id + '_anchor'));
-        var div_input = angular.element('<div class="input-group padding-top-bottom-5px margin-left-24px" id="div-input-newfile"><input type="text" class="form-control input-height"  id="input-newfile" placeholder="new file"></input></div>');
+        var div_input = angular.element('<div class="input-group padding-top-bottom-5px margin-left-24px" id="div-input-newfile"><input type="text" class="form-control input-height"  id="input-newfile" ng-model="newfile" placeholder="new file"></input></div>');
         div_input.insertAfter(nodeFolder);
         var disable_input = document.addEventListener("mouseup", function(event) {
           div_input = document.getElementById("div-input-newfile");
