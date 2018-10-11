@@ -19,5 +19,26 @@
 //   };
 
 // });
+// var myApp = angular.module('demoApp', ['ui.router', 'ui.bootstrap']);
 
-
+// myApp.controller("IndexController", ['$scope', '$http', '$uibModal', function($scope, $http, $uibModal) {
+//   $scope.login = function () {
+//     $uibModal.open({
+//       templateUrl: 'views/login.html',
+//       controller: function ($scope, $uibModalInstance) {
+//         $scope.submit = function () {
+//           if($scope.username == 'admin' && $scope.password == 'admin'){
+//             $uibModalInstance.close();
+//           }
+//           else{
+//             alert('Wrong Stuff');
+//           }
+//         };
+      
+//         // $scope.cancel = function () {
+//         //   $uibModalInstance.dismiss('cancel');
+//         // };
+//       }
+//     })
+//   }
+// }])

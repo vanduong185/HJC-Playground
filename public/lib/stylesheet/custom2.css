@@ -1,3 +1,4 @@
+@import "login.css" ;
 .editor {
   margin-top: 10px;
 }
@@ -7,7 +8,6 @@
   background-color: #fff;
   box-shadow: 0 5px 8px rgb(185, 181, 181);
   overflow: auto;
-  padding: 10px;
 }
 
 .editor-tabs {
@@ -41,6 +41,10 @@
   box-shadow: 0 3px 5px rgb(185, 181, 181) !important;
 }
 
+.CodeMirror {
+  border: none !important;
+}
+
 .orange {
   color: #fb821b;
 }
@@ -55,4 +59,15 @@
 
 .gray {
   color: #848282;
+}
+.padding-top-bottom-5px {
+  padding: 5px 0px 5px 0px;
+}
+
+.margin-left-24px {
+  margin-left: 24px;
+}
+
+.input-height {
+  height: 1.75em !important;
 }
