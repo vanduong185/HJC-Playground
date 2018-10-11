@@ -1,4 +1,4 @@
-var myApp = angular.module('demoApp', ['ui.router']);
+var myApp = angular.module('demoApp', ['ui.router', 'ui.bootstrap']);
 
 myApp.config(function($stateProvider, $urlRouterProvider) {
   var homeState = {
@@ -155,3 +155,11 @@ myApp.controller('EditorController', ['$scope', '$http', function($scope, $http)
     });    
   });
 }]);
+
+myApp.controller('LoginController', ['$scope', '$http', '$uibModal', function($scope, $http, $uibModal) {
+  $scope.show = function() {
+    $uibModal.open({
+      templateUrl: 'views/login.html'
+    })
+  }
+}])
