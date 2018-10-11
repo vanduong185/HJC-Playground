@@ -131,34 +131,35 @@ myApp.controller('EditorController', ['$scope', '$http', function($scope, $http)
       } 
       time_out = setTimeout(function() {
         var text = editor.getValue();
-
-        if (angular.element(
-          document.getElementById("tree_1")
-          ).jstree(true)._model.data[selected_file.id].original.content != text) {
-
-          var data_change = {
-            username: username,
-            flag: "change",
-            file_path: selected_file.path,
-            content: text
-          }
-
-          angular.element(
+        if (angular.element(document.getElementById("tree_1")).jstree(true)._model.data[selected_file.id]) {
+          if (angular.element(
             document.getElementById("tree_1")
-          ).jstree(true)._model.data[selected_file.id].original.content = text;
-          
-          $http({
-            method: "POST",
-            url: '/playground',
-            data: data_change,
-            headers: { 'Content-Type': 'application/json'}
-          }).then(function Success(res) {
-            setTimeout(function(){
-              angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
-            }, 500) //set timeout for reloading iframe
-          }, function Error(res) {
-            alert(res);
-          });
+            ).jstree(true)._model.data[selected_file.id].original.content != text) {
+
+            var data_change = {
+              username: username,
+              flag: "change",
+              file_path: selected_file.path,
+              content: text
+            }
+
+            angular.element(
+              document.getElementById("tree_1")
+            ).jstree(true)._model.data[selected_file.id].original.content = text;
+            
+            $http({
+              method: "POST",
+              url: '/playground',
+              data: data_change,
+              headers: { 'Content-Type': 'application/json'}
+            }).then(function Success(res) {
+              setTimeout(function(){
+                angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
+              }, 500) //set timeout for reloading iframe
+            }, function Error(res) {
+              alert(res);
+            });
+          }
         }
       }, 3000) // set timeout 2 second
     });
@@ -276,6 +277,9 @@ myApp.controller('EditorController', ['$scope', '$http', function($scope, $http)
           headers: { 'Content-Type': 'application/json'}
         }).then(function Success(res) {
           console.log(res);
+          setTimeout(function(){
+            angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
+          }, 500) //set timeout for reloading iframe
         })
       }
       else {
@@ -291,6 +295,9 @@ myApp.controller('EditorController', ['$scope', '$http', function($scope, $http)
           headers: { 'Content-Type': 'application/json'}
         }).then(function Success(res) {
           console.log(res);
+          setTimeout(function(){
+            angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
+          }, 500) //set timeout for reloading iframe
         })
       }
     });
