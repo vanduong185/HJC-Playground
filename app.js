@@ -42,16 +42,74 @@ app.get("/playground", function(req,res) {
 
 app.post("/playground", function(req,res) {
   console.log(req.body);
-  var data_change = req.body;
+  var data = req.body;
 
-  fs.writeFile(data_change.file_path, data_change.content, function(err) {
-    if (err) {
-      console.log(err);
-    } 
-    else {
-      res.send(200);
+  switch (data.flag) {
+    case "change" : {
+      fs.writeFile(data.file_path, data.content, function(err) {
+        if (err) {
+          console.log(err);
+        } 
+        else {
+          res.send(200);
+        }
+      });
+      break;
     }
-  })
+    case "create file" : {
+      fs.writeFile(data.file_path, data.content, function(err) {
+        if (err) {
+          console.log(err);
+        } 
+        else {
+          res.send(200);
+        }
+      });
+      break;
+    }
+    case "create folder" : {
+      fs.mkdir(data.file_path, function(err) {
+        if (err) {
+          console.log(err);
+        } 
+        else {
+          res.send(200);
+        }
+      });
+      break;
+    }
+    case "delete folder" : {
+      fs.rmdir(data.file_path, function(err) {
+        if (err) {
+          console.log(err);
+        }
+        else {
+          res.send(200);
+        }
+      })
+    }
+    case "delete file" : {
+      fs.unlink(data.file_path, function(err) {
+        if (err) {
+          console.log(err);
+        }
+        else {
+          res.send(200);
+        }
+      })
+    }
+  }
+  // if (data.flag == "change") {
+  //   fs.writeFile(data.file_path, data.content, function(err) {
+  //     if (err) {
+  //       console.log(err);
+  //     } 
+  //     else {
+  //       res.send(200);
+  //     }
+  //   })
+  // }
+  
 });
 
 function parseDirectory(filename) {
