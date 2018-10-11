@@ -311,8 +311,15 @@ myApp.controller('EditorController', ['$scope', '$http', function($scope, $http)
 myApp.controller("IndexController", ['$scope', '$http', '$uibModal', function($scope, $http, $uibModal) {
   $scope.login = function () {
     $uibModal.open({
-      templateUrl: 'views/login.html'
-      
+      templateUrl: 'views/login.html',
+      controller: "LoginController"
     })
   }
+}])
+
+myApp.controller("LoginController", ['$scope', '$uibModal', '$uibModalInstance', function($scope, $uibModal, $uibModalInstance) {
+  $scope.close = function() {
+    $uibModalInstance.close();
+    console.log("a");
+  };
 }])
