@@ -34,37 +34,107 @@ app.get("/users",function(req,res){
 });
 
 app.get("/playground", function(req,res) {
-  var username = 'DuongNguyen';
+  var username = 'lab';
   var user_dir = './public/data/' + username;
   
-  res.json(parseDirectory(user_dir));
+  res.json(parseDirectory(user_dir, username));
 });
 
 app.post("/playground", function(req,res) {
   console.log(req.body);
-  var data_change = req.body;
-
-  fs.writeFile(data_change.file_path, data_change.content, function(err) {
-    if (err) {
-      console.log(err);
-    } 
-    else {
-      res.send(200);
+  var data = req.body;
+  var root_dir = './public/data/';
+  switch (data.flag) {
+    case "change" : {
+      fs.writeFile(root_dir + data.file_path, data.content, function(err) {
+        if (err) {
+          console.log(err);
+        } 
+        else {
+          res.send(200);
+        }
+      });
+      break;
     }
-  })
+    case "create file" : {
+      fs.writeFile(root_dir + data.file_path, data.content, function(err) {
+        if (err) {
+          console.log(err);
+        } 
+        else {
+          res.send(200);
+        }
+      });
+      break;
+    }
+    case "create folder" : {
+      fs.mkdir(root_dir + data.file_path, function(err) {
+        if (err) {
+          console.log(err);
+        } 
+        else {
+          res.send(200);
+        }
+      });
+      break;
+    }
+    case "delete folder" : {
+      fs.rmdir(root_dir + data.file_path, function(err) {
+        if (err) {
+          console.log(err);
+        }
+        else {
+          res.send(200);
+        }
+      })
+    }
+    case "delete file" : {
+      fs.unlink(root_dir + data.file_path, function(err) {
+        if (err) {
+          console.log(err);
+        }
+        else {
+          res.send(200);
+        }
+      })
+    }
+    case "rename file" : {
+      fs.rename(root_dir + data.old_path, root_dir + data.new_path, function(err) {
+        if (err) {
+          
+        }
+        else {
+          res.send(200);
+        }
+      })
+    }
+    case "rename folder" : {
+      fs.rename(root_dir + data.old_path, root_dir + data.new_path, function(err) {
+        if (err) {
+          
+        }
+        else {
+          res.send(200);
+        }
+      })
+    }
+  }
 });
 
-function parseDirectory(filename) {
+function parseDirectory(filename, username) {
   var stats = fs.lstatSync(filename);
+  arr = filename.split("/");
+  arr.splice(0, arr.indexOf(username));
+  fpath = arr.join("/");
   var info = {
-    path: filename,
+    path: fpath,
     text: path.basename(filename)
   };
 
   if (stats.isDirectory()) {
     info.type = "folder";
     info.children = fs.readdirSync(filename).map(function(child) {
-        return parseDirectory(filename + '/' + child);
+        return parseDirectory(filename + '/' + child, username);
     });
   } 
   else {
