@@ -83,8 +83,8 @@ myApp.controller('EditorController', ['$scope', '$http', function($scope, $http)
       },
       'plugins':['types']
     });
-
-    // initialize result iframe 
+    
+    // initialize result iframe
     angular.element(document.getElementById('result-iframe'))[0].src = '../data/' + username + '/index.html';
 
     // fire event when select file or folder on tree view, set code of file for editor 
@@ -157,17 +157,11 @@ myApp.controller('EditorController', ['$scope', '$http', function($scope, $http)
                 angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
               }, 500) //set timeout for reloading iframe
             }, function Error(res) {
-              alert(res);
             });
           }
         }
       }, 3000) // set timeout 2 second
     });
-
-    //fire event create a file
-    // angular.element(document.getElementById('tree_1')).on('create_node.jstree', function(e, data) {
-    //   console.log('saved');
-    // });
     
     $scope.newFile = function() {
       if (selected_folder)
@@ -312,6 +306,131 @@ myApp.controller('EditorController', ['$scope', '$http', function($scope, $http)
         angular.element(document.getElementById('tree_1')).jstree("delete_node", selected_file.id);
       }
     }
+
+    //fire event rename a file or a folder
+    $scope.rename = function() {
+      if (selected_folder) {
+        nodeFolder = angular.element(document.getElementById(selected_folder.id+ "_anchor"));
+        div_input = angular.element('<div class="input-group padding-top-bottom-5px margin-left-24px" id="div-input-rename"><input type="text" class="form-control input-height" id="input-rename"></div>');
+        div_input.insertAfter(nodeFolder);
+        input = document.getElementById("input-rename");
+        input.value = nodeFolder[0].textContent;
+        document.addEventListener("mouseup", function(event) {
+          div_input = document.getElementById("div-input-rename");
+          if (div_input && $(event.target).is("#input-rename") == false) {
+            div_input.remove();
+          }
+        });
+        input.addEventListener("keypress", function(e) {
+          if (e.keyCode === 13) {
+            foldername = input.value;
+            node = angular.element(
+              document.getElementById("tree_1")
+              ).jstree(true)._model.data[selected_folder.id];
+            node.original.text = foldername;
+            path = node.original.path;
+            arr = path.split("/");
+            arr[arr.length-1] = foldername;
+            node.original.path = arr.join("/");
+            angular.element(document.getElementById('tree_1')).jstree("rename_node", selected_folder.id, foldername);
+          }
+        });
+      }
+      else {
+        nodeFile = angular.element(document.getElementById(selected_file.id+ "_anchor"));
+        div_input = angular.element('<div class="input-group padding-top-bottom-5px margin-left-24px" id="div-input-rename"><input type="text" class="form-control input-height" id="input-rename"></div>');
+        div_input.insertAfter(nodeFile);
+        input = document.getElementById("input-rename");
+        input.value = nodeFile[0].textContent;
+        document.addEventListener("mouseup", function(event) {
+          div_input = document.getElementById("div-input-rename");
+          if (div_input && $(event.target).is("#input-rename") == false) {
+            div_input.remove();
+          }
+        });
+        input.addEventListener("keypress", function(e) {
+          if (e.keyCode === 13) {
+            filename = input.value;
+            filetype = null;
+            if (filename.includes(".html")) {
+              filetype = "file-html";
+              editor.setOption("mode", "htmlmixed");
+            }
+            else if (filename.includes(".css")) {
+              filetype = "file-css";
+              editor.setOption("mode", "css");
+            }
+            else if (filename.includes(".js")) {
+              filetype = "file-js";
+              editor.setOption("mode", "javascript");
+            }
+            else {
+              filetype = "file";
+              editor.setOption("mode", "text/plain");
+            }
+            node = angular.element(
+              document.getElementById("tree_1")
+              ).jstree(true)._model.data[selected_file.id];
+            node.original.type = filetype;
+            node.original.text = filename;
+            path = node.original.path;
+            arr = path.split("/");
+            arr[arr.length-1] = filename;
+            node.original.path = arr.join("/");
+            angular.element(
+              document.getElementById("tree_1")
+              ).jstree(true).set_type(selected_file.id, filetype);
+            angular.element(document.getElementById('tree_1')).jstree("rename_node", selected_file.id, filename);
+          }
+        });
+      }
+    }
+
+    angular.element(document.getElementById('tree_1')).on('rename_node.jstree', function(e, data) {
+      console.log(data);
+      node = data.node;
+      arr = node.original.path.split("/");
+      arr[arr.length -1] = data.old;
+      old_path = arr.join("/");
+      if (node.original.type == "folder") {
+        rename_folder = {
+          username: username,
+          flag: "rename folder",
+          new_path: node.original.path,
+          old_path: old_path
+        };
+        $http({
+          method: "POST",
+          url: '/playground',
+          data: rename_folder,
+          headers: { 'Content-Type': 'application/json'}
+        }).then(function Success(res) {
+          console.log(res);
+          setTimeout(function(){
+            angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
+          }, 500) //set timeout for reloading iframe
+        })
+      }
+      else {
+        rename_file = {
+          username: username,
+          flag: "rename file",
+          new_path: node.original.path,
+          old_path: old_path
+        };
+        $http({
+          method: "POST",
+          url: '/playground',
+          data: rename_file,
+          headers: { 'Content-Type': 'application/json'}
+        }).then(function Success(res) {
+          console.log(res);
+          setTimeout(function(){
+            angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
+          }, 500) //set timeout for reloading iframe
+        })
+      }
+    });
   });
 }]);
 
