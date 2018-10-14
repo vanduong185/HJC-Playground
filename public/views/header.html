@@ -1,0 +1,40 @@
+<div ng-controller="HeaderController" class="page-header navbar-fixed-top hjc-box-shadow">
+  <div class="clearfix">
+    <!-- BEGIN LOGO -->
+    <div class="page-logo padding-left-30px">
+      <a href="#">
+        <img src="../lib/metronic/assets/layouts/layout7/img/logo.png" alt="logo" class="logo-default" />
+      </a>
+    </div>
+    <!-- END LOGO -->
+    <!-- BEGIN TOP NAVIGATION MENU -->
+    <div class="top-menu">
+      <ul class="nav navbar-nav pull-right">
+        <li>
+          <a ui-sref="home" class="menubar-center">Home</a>
+        </li>
+        <li>
+          <a ui-sref="playground" class="menubar-center">Playground</a>
+        </li>
+        <li class="dropdown dropdown-user">
+          <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+            <div class="dropdown-user-inner">
+              <span class="username username-hide-on-mobile"> Nick </span>
+              <img alt="" src="../lib/metronic/assets/layouts/layout7/img/avatar1.jpg" /> </div>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-default">
+            <li>
+              <a href="#">
+                <i class="icon-user"></i> My Profile </a>
+            </li>
+            <li>
+              <a href="#" ng-click="login()">
+                <i class="icon-key"></i> Log Out </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <!-- END TOP NAVIGATION MENU -->
+  </div>
+</div>
