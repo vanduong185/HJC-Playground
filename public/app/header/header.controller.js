@@ -1,8 +1,12 @@
-angular.module('app').controller("HeaderController", ['$scope', '$http', '$uibModal', function($scope, $http, $uibModal) {
-  $scope.login = function () {
-    $uibModal.open({
-      templateUrl: 'views/login.html',
-      controller: "LoginController"
-    })
+angular.module('app').controller("HeaderController", ['Auth', '$location', '$rootScope', '$scope', '$http', '$uibModal',
+  function(Auth, $location, $rootScope, $scope, $http, $uibModal) {
+    $scope.showLoginModal = function () {
+      Auth.showLoginModal();
+    }
+
+    $scope.logout = function() {
+      Auth.ClearCredentials();
+      $location.path("/home");
+    }
   }
-}])
+])

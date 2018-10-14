@@ -1,4 +1,4 @@
-angular.module('app').config(function($stateProvider, $urlRouterProvider, $locationProvider) {
+myApp.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
   var homeState = {
     name: 'home',
     url: '/home',
