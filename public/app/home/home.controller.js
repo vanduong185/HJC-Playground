@@ -1,3 +1,5 @@
-angular.module('app').controller('HomeController', ['$scope', '$state', '$http', function ($scope, $state, $http) {
+myApp.controller('HomeController', ['$scope', '$state', '$http',
+  function ($scope, $state, $http) {
 
-}]);
+  }
+]);
