@@ -308,36 +308,28 @@ myApp.controller('EditorController', ['$scope', '$http', function($scope, $http)
   });
 }]);
 
-// myApp.controller("IndexController", ['$scope', '$http', '$uibModal', function($scope, $http, $uibModal) {
-//   $scope.login = function () {
-//     $uibModal.open({
-//       templateUrl: 'views/login.html',
-//       controller: 'LoginController'
-//     })
-//   }
-// }])
-myApp.controller('IndexController', 
-['$scope', '$http', '$uibModal','$uibModalInstance',
-function($scope, $http, $uibModal, $uibModalInstance) {
-  'use strict';
+myApp.controller("IndexController", ['$scope', '$http', '$uibModal', function($scope, $http, $uibModal) {
   $scope.login = function () {
-    
-      $uibModal.open({
+    $uibModal.open({
       templateUrl: 'views/login.html',
-      controller: function ($scope, $uibModalInstance) {
-        $scope.submit = function () {
-          if($scope.username == 'admin' && $scope.password == 'admin'){
-            $uibModalInstance.close();
-          }
-          else{
-            alert('Wrong Stuff');
-          }
-        };
-      
-        // $scope.cancel = function () {
-        //   $uibModalInstance.dismiss('cancel');
-        // };
-      }
-    });
+      controller: "LoginController"
+    })
+  }
+}])
+
+myApp.controller("LoginController", ['$scope', '$uibModal', '$uibModalInstance', function($scope, $uibModal, $uibModalInstance) {
+  $scope.close = function() {
+    $uibModalInstance.close();
   };
-}]);
+  $scope.submit = function(){
+    if($scope.username == "admin" && $scope.password == "admin"){ //hashcode TODO
+      $uibModalInstance.close();
+    }
+    else{
+      alert('Wrong Stuff');
+    }
+  }
+  $scope.register = function(){
+    
+  }
+}])
