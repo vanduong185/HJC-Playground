@@ -70,3 +70,8 @@
 .input-height {
   height: 1.75em !important;
 }
+
+.close {
+  background-image: none !important;
+  text-indent: 0px !important;
+}
