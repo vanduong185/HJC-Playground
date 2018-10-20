@@ -19,6 +19,7 @@ module_authen.factory("Auth",
           var response = {};
           if (res.data.message === "success") {
             response.success = true;
+            $rootScope.globals.currentUserInfo = res.data.data;
             callback(response);
           }
           else {
@@ -35,9 +36,7 @@ module_authen.factory("Auth",
 
     service.SetCredentials = function (username, password) {
       var authdata = Base64.encode(username + ":" + password);
-      $rootScope.globals = {
-        currentUser: { username: username, authdata: authdata }
-      };
+      $rootScope.globals.currentUser = { username: username, authdata: authdata }
 
       $http.defaults.headers.common["Authorization"] = "Basic " + authdata;
       $cookieStore.put("globals", $rootScope.globals);
