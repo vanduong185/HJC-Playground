@@ -1,0 +1,30 @@
+<div class="row widget-bg-color-white no-space margin-top-30px-important">
+  <div class="col-md-3 col-sm-6 no-space">
+    <div class="widget-subscribe">
+      <h2 class="widget-subscribe-title widget-title-color-gray-dark text-uppercase margin-left-0px">
+        Create new project !
+      </h2>
+    </div>
+  </div>
+  <div class="col-md-9 col-sm-6 no-space">
+    <div class="widget-subscribe widget-subscribe-border">
+      <h2 class="widget-subscribe-title widget-title-color-gray-dark text-uppercase margin-left-0px">
+        Your projects
+      </h2>
+      <div class="row">
+        <div ng-repeat="project in projects" class="col-md-3 col-sm-6">
+          <div class="item">
+            <div class="item-view">
+              <i class="fa fa-folder blue"></i>
+            </div>
+            <div class="item-title">
+              <a ui-sref="projects.show({project_id: project.project_id})" title="Open project">
+                  {{project.project_name}}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

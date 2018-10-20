@@ -1,8 +1,13 @@
-myApp.controller('PlaygroundController', ['$scope', '$state', '$http',
-  function ($scope, $state, $http) {
-    $http.get('/playground').success(function (response) {
-      var username = response.text;
-
+myApp.controller('PlaygroundController', ['$rootScope', '$scope', '$state', '$http',
+  function ($rootScope, $scope, $state, $http) {
+    $http({
+      method: "GET",
+      url: '/projects/' + $rootScope.globals.currentUserInfo.user_id + '/1',
+      headers: { 'Content-Type': 'application/json' }
+    }).success(function (response) {
+      console.log(response);
+      var project = response.project;
+      var data = response.data;
       // initialize editor with CodeMirror plugin
       var editor = CodeMirror(document.getElementById("codeeditor"), {
         mode: "html",
@@ -21,7 +26,7 @@ myApp.controller('PlaygroundController', ['$scope', '$state', '$http',
           'theme': {
             'responsive': false
           },
-          'data': response
+          'data': data
         },
         'types': {
           'default': { icon: "fa fa-folder gray icon-lg" },
@@ -34,7 +39,7 @@ myApp.controller('PlaygroundController', ['$scope', '$state', '$http',
       });
 
       // initialize result iframe
-      angular.element(document.getElementById('result-iframe'))[0].src = '../data/' + username + '/index.html';
+      angular.element(document.getElementById('result-iframe'))[0].src = '../data/' + project.author_id + '/' + project.project_name + '/index.html';
 
       // fire event when select file or folder on tree view, set code of file for editor 
       var selected_file = {};
@@ -378,6 +383,10 @@ myApp.controller('PlaygroundController', ['$scope', '$state', '$http',
             }, 500) //set timeout for reloading iframe
           })
         }
+      });
+
+      $.get("https://api.cdnjs.com/libraries", function(data){
+        console.log(data);
       });
     });
   }]);
