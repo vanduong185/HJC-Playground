@@ -14,6 +14,14 @@ form h1 {
 input {
   margin: 40px 25px;
   width: 200px;
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+  height: 50px;
+>>>>>>> e963b952b2fe3cfe097b45a1a25a0de03c2870fd
+=======
+  height: 50px;
+>>>>>>> e963b952b2fe3cfe097b45a1a25a0de03c2870fd
   display: block;
   border: none;
   padding: 10px 0;

@@ -1,7 +1,7 @@
 module_authen.factory("Auth",
   ["Base64", "$http", "$cookieStore", "$rootScope", "$timeout", "$uibModal",
   function (Base64, $http, $cookieStore, $rootScope, $timeout, $uibModal) {
-    var service = {};
+    var service = {}; 
     service.Login = function (username, password, callback) {
       $timeout(function(){
         var response = { success: username === "4players" && password === "abc123" };

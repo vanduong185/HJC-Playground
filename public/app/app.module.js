@@ -7,7 +7,10 @@ myApp.run(["$rootScope", "$location", '$cookieStore', '$http',
       $http.defaults.headers.common["Authorization"] = "Basic " + $rootScope.globals.currentUser.authdata; // jshint ignore:line
     }
     $rootScope.$on("$locationChangeStart", function (event, next, current) {
-      if ($location.path() !== "/home" && !$rootScope.globals.currentUser) {
+      // if($location.path() == "/signUp"){
+      //   $location.path("/signUp");
+      // }
+       if ($location.path() !== "/home" && $location.path() !== "/signUp" && !$rootScope.globals.currentUser) {
         $location.path("/home");
       }
     });
