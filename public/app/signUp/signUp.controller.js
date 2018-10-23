@@ -3,7 +3,7 @@ myApp.controller('SignUpController', ['$location','$scope', '$state', '$http','A
 		$scope.register = function(){		
 				$location.path("\home") ;
 				Auth.showLoginModal();			
-		}
+		}	
 		jQuery("#register-back-btn").click(function () {
 			$location.path("\home");
 		})
