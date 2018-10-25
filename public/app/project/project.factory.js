@@ -19,6 +19,13 @@ myApp.factory('ProjectAPI', ['$http', '$rootScope', function ($http, $rootScope)
         url: '/projects/' + $rootScope.globals.currentUserInfo.user_id + '/' + project_id,
         headers: { 'Content-Type': 'application/json' }
       })
+    },
+    createProject: function(new_project) {
+      return $http.post('/projects/' + $rootScope.globals.currentUserInfo.user_id,
+        {new_project: new_project});
+    },
+    deleteProject: function(project_id) {
+      return $http.delete('/projects/' + $rootScope.globals.currentUserInfo.user_id + '/' + project_id)
     }
   }
 }])

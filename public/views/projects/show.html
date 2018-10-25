@@ -35,29 +35,36 @@
   </div>
   <div class="col-sm-3 col-md-3 margin-bottom-20">
     <div class="library">
-      <div class="portlet light">
-        <div class="portlet-title">
-          <div class="caption">
-            <div class="input-group">
-              <input type="text" class="form-control" ng-model="keyword" placeholder="Search library...">
-              <span class="input-group-btn">
-                <button class="btn blue uppercase bold" type="button" ng-click="searchLibrary()">Search</button>
-              </span>
-            </div>
-          </div>
+      <div class="m-header">
+        <div class="input-group">
+          <input type="text" class="form-control" ng-model="keyword" placeholder="Search library...">
+          <span class="input-group-btn">
+            <button class="btn blue bold" type="button" ng-click="searchLibrary()">Search</button>
+          </span>
         </div>
-        <div class="portlet-body">
-          <div ng-repeat="lib in libraries" class="library-item">
-            <p><strong>{{lib.name}}</strong></p>
-            <span>{{lib.latest}}</span>
-          </div>
+      </div>
+      <div class="m-content">
+        <div ng-repeat="lib in libraries" class="library-item">
+          <p><strong>{{lib.name}}</strong></p>
+          <span>{{lib.latest}}</span>
         </div>
       </div>
     </div>
   </div>
 </div>
 <div class="row widget-row">
-  <div class="col-md-12 result-panel">
+  <div class="col-md-9 result-panel">
     <iframe id="result-iframe" class="result-iframe"></iframe>
+  </div>
+  <div class="col-md-3">
+    <div class="console-panel">
+      <div class="m-header">
+        <span class="m-header-title bold uppercase blue">Console</span>
+        <button class="m-header-action btn blue bold" type="button" ng-click="clearConsole()">Clear</button>
+      </div>
+      <div class="m-content" id="console">
+
+      </div>
+    </div>
   </div>
 </div>

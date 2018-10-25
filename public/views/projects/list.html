@@ -4,6 +4,12 @@
       <h2 class="widget-subscribe-title widget-title-color-gray-dark text-uppercase margin-left-0px">
         Create new project !
       </h2>
+      <div class="input-group">
+        <input type="text" class="form-control" ng-model="new_project.name" placeholder="Enter project name...">
+        <span class="input-group-btn">
+          <button class="btn blue bold" type="button" ng-click="createProject()">Create</button>
+        </span>
+      </div>
     </div>
   </div>
   <div class="col-md-9 col-sm-6 no-space">
@@ -15,6 +21,7 @@
         <div ng-repeat="project in projects" class="col-md-3 col-sm-6">
           <div class="item">
             <div class="item-view">
+              <button type="button" ng-click="showDeleteModal(project.project_id)" class="close"><i class="fa fa-close hover-display"></i></button> 
               <i class="fa fa-folder blue"></i>
             </div>
             <div class="item-title">
