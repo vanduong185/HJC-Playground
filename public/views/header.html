@@ -16,6 +16,11 @@
         <li>
           <a ui-sref="playground" class="menubar-center">Playground</a>
         </li>
+        <li ng-if="globals.currentUser">
+          <a ui-sref="projects.list" class="menubar-center" title="Projects">
+            <i class="fa fa-folder"></i>
+          </a>
+        </li>
         <li ng-if="globals.currentUser" class="dropdown dropdown-user">
           <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
             <div class="dropdown-user-inner">

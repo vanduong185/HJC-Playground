@@ -1,22 +1,42 @@
 module_authen.factory("Auth",
   ["Base64", "$http", "$cookieStore", "$rootScope", "$timeout", "$uibModal",
   function (Base64, $http, $cookieStore, $rootScope, $timeout, $uibModal) {
-    var service = {}; 
+    var service = {};
     service.Login = function (username, password, callback) {
       $timeout(function(){
-        var response = { success: username === "4players" && password === "abc123" };
-        if(!response.success) {
+        var credential = {
+          username: username,
+          password: password
+        };
+        var response = {};
+        $http({
+          method: "POST",
+          url: '/login',
+          data: credential,
+          headers: { 'Content-Type': 'application/json' }
+        }).then(function Success(res) {
+          console.log(res);
+          var response = {};
+          if (res.data.message === "success") {
+            response.success = true;
+            $rootScope.globals.currentUserInfo = res.data.data;
+            callback(response);
+          }
+          else {
+            response.message = "Username or password is incorrect";
+            callback(response);
+          }
+        }, function Error(res) {
+          console.log(res);
           response.message = "Username or password is incorrect";
-        }
-        callback(response);
+          callback(response);
+        });
       }, 1000);
     };
 
     service.SetCredentials = function (username, password) {
       var authdata = Base64.encode(username + ":" + password);
-      $rootScope.globals = {
-        currentUser: { username: username, authdata: authdata }
-      };
+      $rootScope.globals.currentUser = { username: username, authdata: authdata }
 
       $http.defaults.headers.common["Authorization"] = "Basic " + authdata;
       $cookieStore.put("globals", $rootScope.globals);
