@@ -5,9 +5,9 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
     // manage libraries
     $scope.libraries = libraries_data.results.slice(0, 10);
     $scope.keyword = "";
-    $scope.searchLibrary = function() {
-      ProjectAPI.searchLibraries($scope.keyword).then(function(res) {
-        $timeout( function(){
+    $scope.searchLibrary = function () {
+      ProjectAPI.searchLibraries($scope.keyword).then(function (res) {
+        $timeout(function () {
           $scope.libraries = res.results.slice(0, 10);
         }, 100);
       })
@@ -47,8 +47,35 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
     });
 
     // initialize result iframe
+    window.addEventListener("message", function (e) {
+      let log = document.createElement("div");
+      
+      if (e.data.type == "log-msg") {
+        log.className = "logger";
+        if(typeof e.data.content === "object") {
+          log.textContent = JSON.stringify(e.data.content);
+        }
+        else {
+          log.textContent = e.data.content;
+        }
+      }
+      if (e.data.type == "error-msg") {
+        log.className = "logger";
+        if(typeof e.data.content === "object") {
+          log.textContent = JSON.stringify(e.data.content);
+        }
+        else {
+          log.innerHTML = '<p class="margin-bot"><strong>' + e.data.position + "</strong></p>" + '<span class="red">'+ e.data.content + "</span>";
+        }
+      }
+      document.getElementById("console").appendChild(log);
+    })
     angular.element(document.getElementById('result-iframe'))[0].src = '../data/' + project.author_id + '/' + project.project_name + '/index.html';
 
+    $scope.clearConsole = function() {
+      document.getElementById("console").textContent = "";
+    }
+ 
     // fire event when select file or folder on tree view, set code of file for editor 
     var selected_file = {};
     var selected_folder = {};

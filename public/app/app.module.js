@@ -1,4 +1,4 @@
-myApp = angular.module('app', ['Authentication', 'ngCookies', 'ui.router', 'ui.bootstrap']);
+myApp = angular.module('app', ['Authentication', 'ngCookies', 'ui.router', 'ui.bootstrap', 'ngBootbox']);
 
 myApp.run(["$rootScope", "$location", '$cookieStore', '$http',
   function ($rootScope, $location, $cookieStore, $http) {
