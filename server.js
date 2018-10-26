@@ -5,6 +5,7 @@ var crypto = require('./crypto');
 var projectRoutes = require('./api/routes/project');
 var playgroundRoutes = require('./api/routes/playground');
 var jwt = require('jsonwebtoken');
+var config = require('./config');
 
 var app = express();
 
@@ -22,14 +23,13 @@ app.post("/login", function (req, res) {
   db.query(query_str, function (err, result) {
     if (result.length > 0) {
       user = result[0];
-      console.log(process.env.JWT_KEY);
       crypto.comparePassword(data.password, user.password, function(err, isPassMatch) {
         if (isPassMatch) {
           const token = jwt.sign({
             email: user.email,
             userId: user.user_id
           },
-          process.env.JWT_KEY,
+          config.secret,
           {
             expiresIn: "1h"
           })
