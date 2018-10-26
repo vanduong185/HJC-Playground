@@ -1,20 +1,20 @@
-myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'ProjectAPI', '$rootScope', '$scope', '$state', '$http', '$timeout',
-  function (project_data, libraries_data, ProjectAPI, $rootScope, $scope, $state, $http, $timeout) {
-    var user_id = $rootScope.globals.currentUserInfo.user_id;
-
-    // manage libraries
+myApp.controller('Playground_GuestController', ['guest_project_data', 'libraries_data', 'GuestProject', '$rootScope', '$scope', '$state', '$http', '$timeout',
+  function (guest_project_data, libraries_data, GuestProject, $rootScope, $scope, $state, $http, $timeout) {
+    
+    //manage libraries
     $scope.libraries = libraries_data.results.slice(0, 10);
     $scope.keyword = "";
     $scope.searchLibrary = function () {
-      ProjectAPI.searchLibraries($scope.keyword).then(function (res) {
+      GuestProject.searchLibraries($scope.keyword).then(function (res) {
         $timeout(function () {
           $scope.libraries = res.results.slice(0, 10);
         }, 100);
       })
     }
 
-    var project = project_data.data.project;
-    var data = project_data.data.data;
+    var guest_project = guest_project_data.data.guest_project;
+    var data = guest_project_data.data.data;
+    data.text = "guest";
 
     // initialize editor with CodeMirror plugin
     var editor = CodeMirror(document.getElementById("codeeditor"), {
@@ -49,10 +49,10 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
     // initialize result iframe
     window.addEventListener("message", function (e) {
       let log = document.createElement("div");
-      
+
       if (e.data.type == "log-msg") {
         log.className = "logger";
-        if(typeof e.data.content === "object") {
+        if (typeof e.data.content === "object") {
           log.textContent = JSON.stringify(e.data.content);
         }
         else {
@@ -61,21 +61,21 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
       }
       if (e.data.type == "error-msg") {
         log.className = "logger";
-        if(typeof e.data.content === "object") {
+        if (typeof e.data.content === "object") {
           log.textContent = JSON.stringify(e.data.content);
         }
         else {
-          log.innerHTML = '<p class="margin-bot"><strong>' + e.data.position + "</strong></p>" + '<span class="red">'+ e.data.content + "</span>";
+          log.innerHTML = '<p class="margin-bot"><strong>' + e.data.position + "</strong></p>" + '<span class="red">' + e.data.content + "</span>";
         }
       }
       document.getElementById("console").appendChild(log);
     })
-    angular.element(document.getElementById('result-iframe'))[0].src = '../data/' + project.author_id + '/' + project.project_name + '/index.html';
+    angular.element(document.getElementById('result-iframe'))[0].src = '../data/guest/' + guest_project + '/index.html';
 
-    $scope.clearConsole = function() {
+    $scope.clearConsole = function () {
       document.getElementById("console").textContent = "";
     }
- 
+
     // fire event when select file or folder on tree view, set code of file for editor 
     var selected_file = {};
     var selected_folder = {};
@@ -126,8 +126,7 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
           ).jstree(true)._model.data[selected_file.id].original.content != text) {
 
             var data_change = {
-              user_id: user_id,
-              project: project,
+              user_id: "guest",
               flag: "change",
               file_path: selected_file.path,
               content: text
@@ -186,8 +185,7 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
             angular.element(document.getElementById('tree_1')).jstree(
               "create_node", selected_folder.id, { "text": filename, "type": filetype, content: " ", path: selected_folder.path + "/" + filename }, "last", function () {
                 var new_file = {
-                  user_id: user_id,
-                  project: project,
+                  user_id: "guest",
                   flag: "create file",
                   file_path: selected_folder.path + "/" + filename,
                   filename: filename,
@@ -225,8 +223,7 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
             angular.element(document.getElementById('tree_1')).jstree(
               "create_node", selected_folder.id, { "text": foldername, "type": "folder", path: selected_folder.path + "/" + foldername }, "last", function () {
                 var new_folder = {
-                  user_id: user_id,
-                  project: project,
+                  user_id: "guest",
                   flag: "create folder",
                   file_path: selected_folder.path + "/" + foldername,
                   foldername: foldername
@@ -249,8 +246,7 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
       node = data.node;
       if (node.original.type == "folder") {
         delete_folder = {
-          user_id: user_id,
-          project: project,
+          user_id: "guest",
           flag: "delete folder",
           file_path: node.original.path
         };
@@ -267,8 +263,7 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
       }
       else {
         delete_file = {
-          user_id: user_id,
-          project: project,
+          user_id: "guest",
           flag: "delete file",
           file_path: node.original.path
         };
@@ -380,8 +375,7 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
       old_path = arr.join("/");
       if (node.original.type == "folder") {
         rename_folder = {
-          user_id: user_id,
-          project: project,
+          user_id: "guest",
           flag: "rename folder",
           new_path: node.original.path,
           old_path: old_path
@@ -399,8 +393,7 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
       }
       else {
         rename_file = {
-          user_id: user_id,
-          project: project,
+          user_id: "guest",
           flag: "rename file",
           new_path: node.original.path,
           old_path: old_path
