@@ -1,5 +1,5 @@
-myApp.controller("LoginController", ["$scope", "$rootScope", "$location", "Auth", "$uibModalInstance", "$uibModal",
-  function($scope, $rootScope, $location, Auth, $uibModalInstance, $uibModal) {
+myApp.controller("LoginController", ["$window", "$scope", "$rootScope", "$location", "Auth", "$uibModalInstance", "$uibModal",
+  function($window, $scope, $rootScope, $location, Auth, $uibModalInstance, $uibModal) {
     Auth.ClearCredentials();
 
     $scope.login = function () {
@@ -16,6 +16,10 @@ myApp.controller("LoginController", ["$scope", "$rootScope", "$location", "Auth"
 
     $scope.close = function() {
       $uibModalInstance.close();
+    };
+    $scope.signUp = function(){
+      $uibModalInstance.close();
+      $location.path("/signUp");
     };
   }
 ])

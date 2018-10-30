@@ -13,6 +13,14 @@ myApp.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
     controller: "UserController"
   };
 
+  var signUpState = {
+    name: 'signUp',
+    url: '/signUp',
+    templateUrl: 'views/signUpForm.html',
+    controller: "SignUpController"
+  };
+  
+  $stateProvider.state(signUpState);
   $stateProvider.state(usersState);
   $stateProvider.state(homeState);
 

@@ -11,7 +11,7 @@ module_authen.factory("Auth",
         var response = {};
         $http({
           method: "POST",
-          url: '/login',
+          url: '/users/login',
           data: credential,
           headers: { 'Content-Type': 'application/json' }
         }).then(function Success(res) {
