@@ -1,25 +1,18 @@
 <h3>Sign Up</h3>
 <p> Enter your personal details below: </p>
-<form class="form" ng-submit="register()" role="form">
-    <div class="form-group">
-        <label class="control-label visible-ie8 visible-ie9">Full Name</label>
-        <div class="input-icon">
-            <i class="fa fa-font"></i>
-            <input ng-model="fullname" class="form-control placeholder-no-fix" type="text" placeholder="Full Name" name="fullname" required
-                 /> </div>
-        <span ng-show="form.fullname.$dirty && form.fullname.$error.required" class="help-block">Fullname is required</span>
-    </div>
-
+<form class="form" ng-submit="register()" role="form">   
+        <div ng-show="error" class="alert alert-danger">{{error}}</div>
     <div class="form-group">
         <!--ie8, ie9 does not support html5 placeholder, so we just show field title for that-->
         <label class="control-label visible-ie8 visible-ie9">Email</label>
         <div class="input-icon">
             <i class="fa fa-envelope"></i>
-            <input ng-model="email" class="form-control placeholder-no-fix" type="text" placeholder="Email" name="email"
+            <input ng-model="email" class="form-control placeholder-no-fix" type="email" placeholder="Email" name="email"
                 required /> </div>
         <span ng-show="form.email.$dirty && form.email.$error.required" class="help-block">Email is required</span>
         <span class="help-block" ng-show="form.email.$error.email">
             Not valid email</span>
+            
     </div>
 
     <div class="form-group">
@@ -30,31 +23,7 @@
                 required /> </div>
         <span ng-show="form.nickname.$dirty && form.nickname.$error.required" class="help-block">Nick name is required</span>
     </div>
-    <div class="form-group">
-        <label class="control-label visible-ie8 visible-ie9">Age</label>
-        <div class="input-icon">
-            <i class="glyphicon glyphicon-time"></i>
-            <input ng-model="age" class="form-control placeholder-no-fix" type="text" placeholder="Age" name="age"
-                required /> </div>
-        <span ng-show="form.age.$dirty && form.age.$error.required" class="help-block">Age is required</span>
-    </div>
-    <div class="form-group">
-        <label class="control-label visible-ie8 visible-ie9">Job title</label>
-        <div class="input-icon">
-            <i class="fa fa-user-md"></i>
-            <input ng-model="jobtitle" class="form-control placeholder-no-fix" type="text" placeholder="Job title" name="city"
-                required /> </div>
-        <span ng-show="form.jobtitle.$dirty && form.jobtitle.$error.required" class="help-block">job title is required</span>
-    </div>
-    <p> Enter your account details below: </p>
-    <div class="form-group">
-        <label class="control-label visible-ie8 visible-ie9">Username</label>
-        <div class="input-icon">
-            <i class="fa fa-user"></i>
-            <input ng-model="username" class="form-control placeholder-no-fix" type="text" autocomplete="off"
-                placeholder="Username" name="username" required /> </div>
-        <span ng-show="form.username.$dirty && form.username.$error.required" class="help-block">Username is required</span>
-    </div>
+    <p> Enter your password below: </p>
     <div class="form-group">
         <label class="control-label visible-ie8 visible-ie9">Password</label>
         <div class="input-icon">
@@ -68,14 +37,14 @@
         <div class="controls">
             <div class="input-icon">
                 <i class="fa fa-check"></i>
-                <input class="form-control placeholder-no-fix" type="password" autocomplete="off" placeholder="Re-type Your Password"
+                <input ng-model = "rpassword" class="form-control placeholder-no-fix" type="password" autocomplete="off" placeholder="Re-type Your Password"
                     name="rpassword" required /> </div>
             <span ng-show="form.rpassword.$dirty && form.rpassword.$error.required" class="help-block">Re-type password
                 is required</span>
+                <span  class="help-block" id = "pass"  >Password and Retype password are not the same</span>
         </div>
     </div>
     <div class="form-actions">
-        <button id="register-back-btn" type="button" class="btn grey-salsa btn-outline" > Back </button>
         <button type="submit" id="register-submit-btn" class="btn green pull-right"> Sign Up
         </button>
     </div>
