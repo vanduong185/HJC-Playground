@@ -2,7 +2,7 @@
   <div class="clearfix">
     <!-- BEGIN LOGO -->
     <div class="page-logo padding-left-30px">
-      <a href="#">
+      <a href="#" ui-sref="home">
         <img src="../lib/metronic/assets/layouts/layout7/img/logo.png" alt="logo" class="logo-default" />
       </a>
     </div>
@@ -11,13 +11,10 @@
     <div class="top-menu">
       <ul class="nav navbar-nav pull-right">
         <li>
-          <a ui-sref="home" class="menubar-center">Home</a>
-        </li>
-        <li>
-          <a ui-sref="playground" class="menubar-center">Playground</a>
+          <a ui-sref="playground.guest" class="menubar-center">Playground</a>
         </li>
         <li ng-if="globals.currentUser">
-          <a ui-sref="projects.list" class="menubar-center" title="Projects">
+          <a ui-sref="projects.dashboard.list" class="menubar-center" title="Projects">
             <i class="fa fa-folder"></i>
           </a>
         </li>

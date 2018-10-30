@@ -17,10 +17,11 @@
 }
 
 .result-iframe {
-  min-height: 400px;
+  height: 400px;
   width: 100%;
   background-color: #fff;
   border-style: none !important;
+  overflow: auto;
 }
 
 #result-iframe {
@@ -37,6 +38,10 @@
   padding-left: 30px;
 }
 
+.padding-top-bottom-50px {
+  padding: 50px 0px;
+}
+
 .hjc-box-shadow {
   box-shadow: 0 3px 5px rgb(185, 181, 181) !important;
 }
@@ -50,7 +55,7 @@
 }
 
 .blue {
-  color: #30b6d4;
+  color: #217ebd;
 }
 
 .red {
@@ -68,6 +73,14 @@
   margin-left: 24px;
 }
 
+.margin-rigth-20px {
+  margin-right: 20px;
+}
+
+.margin-rigth-10px {
+  margin-right: 10px !important;
+}
+
 .margin-top-30px-important {
   margin-top: 30px !important;
 }
@@ -83,6 +96,9 @@
 .close {
   background-image: none !important;
   text-indent: 0px !important;
+  width: 15px;
+  height: 15px;
+  font-size: 15px;
 }
 
 .item {
@@ -90,10 +106,44 @@
   margin: 0 0 20px;
 }
 
+.item:hover{
+  background-color: #eee;
+}
+.item:hover .hover-display {
+  display: block !important;
+}
+.hover-display {
+  display: none !important;
+}
+
+.btn-action {
+  display: block;
+  font-size: 20px;
+  float: none !important;
+  margin-bottom: 10px;
+  width: 20px;
+  height: 20px;
+}
+
 .item-view {
   padding: 10px;
   text-align: center;
+}
+
+.icon-big {
   font-size: 100px;
+  margin-top: 50px;
+}
+
+.author {
+  padding: 10px;
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+.item-action {
+  float: right;
+  margin-left: -15px;
 }
 
 .item-title {
@@ -105,9 +155,9 @@
 
 .library {
   height: 300px;
+  padding: 20px;
   background-color: #fff;
   box-shadow: 0 5px 8px rgb(185, 181, 181);
-  overflow: auto;
 }
 
 .library-item {
@@ -118,4 +168,62 @@
   background: #fafafa;
   padding: 5px;
   margin-bottom: 10px;
+}
+
+.console-panel{
+  height: 400px;
+  background-color: #fff;
+  border-style: none !important;
+  padding: 20px;
+}
+
+.m-header {
+  height: 50px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.m-content {
+  height: calc(100% - 50px);
+  padding-right: 15px;
+  overflow: auto;
+}
+
+.m-header-title {
+  float: left;
+  padding: 10px 0px;
+}
+
+.m-header-action{
+  float: right;
+}
+
+.logger {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  background: #fafafa;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.margin-bot {
+  margin: 0 0 20px !important;
+}
+
+.list_viewer {
+  margin-top: 20px;
+  display: inline-block;
+}
+
+.viewer {
+  display: inline-block;
+  margin-right: 20px;
+  margin-bottom: 10px; 
+}
+
+.viewer-remove {
+  margin-left: 10px;
+  cursor: pointer;
 }

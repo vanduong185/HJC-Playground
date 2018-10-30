@@ -5,9 +5,9 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
     // manage libraries
     $scope.libraries = libraries_data.results.slice(0, 10);
     $scope.keyword = "";
-    $scope.searchLibrary = function() {
-      ProjectAPI.searchLibraries($scope.keyword).then(function(res) {
-        $timeout( function(){
+    $scope.searchLibrary = function () {
+      ProjectAPI.searchLibraries($scope.keyword).then(function (res) {
+        $timeout(function () {
           $scope.libraries = res.results.slice(0, 10);
         }, 100);
       })
@@ -47,8 +47,35 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
     });
 
     // initialize result iframe
+    window.addEventListener("message", function (e) {
+      let log = document.createElement("div");
+      
+      if (e.data.type == "log-msg") {
+        log.className = "logger";
+        if(typeof e.data.content === "object") {
+          log.textContent = JSON.stringify(e.data.content);
+        }
+        else {
+          log.textContent = e.data.content;
+        }
+      }
+      if (e.data.type == "error-msg") {
+        log.className = "logger";
+        if(typeof e.data.content === "object") {
+          log.textContent = JSON.stringify(e.data.content);
+        }
+        else {
+          log.innerHTML = '<p class="margin-bot"><strong>' + e.data.position + "</strong></p>" + '<span class="red">'+ e.data.content + "</span>";
+        }
+      }
+      document.getElementById("console").appendChild(log);
+    })
     angular.element(document.getElementById('result-iframe'))[0].src = '../data/' + project.author_id + '/' + project.project_name + '/index.html';
 
+    $scope.clearConsole = function() {
+      document.getElementById("console").textContent = "";
+    }
+ 
     // fire event when select file or folder on tree view, set code of file for editor 
     var selected_file = {};
     var selected_folder = {};
@@ -172,7 +199,6 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
                   data: new_file,
                   headers: { 'Content-Type': 'application/json' }
                 }).then(function Success(res) {
-                  console.log(res);
                 })
               });
           }
@@ -211,7 +237,6 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
                   data: new_folder,
                   headers: { 'Content-Type': 'application/json' }
                 }).then(function Success(res) {
-                  console.log(res);
                 })
               });
           }
@@ -221,7 +246,6 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
 
     //fire event delete a file or a folder
     angular.element(document.getElementById('tree_1')).on('delete_node.jstree', function (e, data) {
-      console.log(data);
       node = data.node;
       if (node.original.type == "folder") {
         delete_folder = {
@@ -236,7 +260,6 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
           data: delete_folder,
           headers: { 'Content-Type': 'application/json' }
         }).then(function Success(res) {
-          console.log(res);
           setTimeout(function () {
             angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
           }, 500) //set timeout for reloading iframe
@@ -255,7 +278,6 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
           data: delete_file,
           headers: { 'Content-Type': 'application/json' }
         }).then(function Success(res) {
-          console.log(res);
           setTimeout(function () {
             angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
           }, 500) //set timeout for reloading iframe
@@ -265,11 +287,9 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
 
     $scope.delete = function () {
       if (selected_folder) {
-        console.log("delete folder");
         angular.element(document.getElementById('tree_1')).jstree("delete_node", selected_folder.id);
       }
       else {
-        console.log("delete file");
         angular.element(document.getElementById('tree_1')).jstree("delete_node", selected_file.id);
       }
     }
@@ -354,7 +374,6 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
     }
 
     angular.element(document.getElementById('tree_1')).on('rename_node.jstree', function (e, data) {
-      console.log(data);
       node = data.node;
       arr = node.original.path.split("/");
       arr[arr.length - 1] = data.old;
@@ -373,7 +392,6 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
           data: rename_folder,
           headers: { 'Content-Type': 'application/json' }
         }).then(function Success(res) {
-          console.log(res);
           setTimeout(function () {
             angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
           }, 500) //set timeout for reloading iframe
@@ -393,7 +411,6 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
           data: rename_file,
           headers: { 'Content-Type': 'application/json' }
         }).then(function Success(res) {
-          console.log(res);
           setTimeout(function () {
             angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
           }, 500) //set timeout for reloading iframe
