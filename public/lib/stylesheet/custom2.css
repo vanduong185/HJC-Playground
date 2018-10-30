@@ -37,6 +37,10 @@
   padding-left: 30px;
 }
 
+.padding-top-bottom-50px {
+  padding: 50px 0px;
+}
+
 .hjc-box-shadow {
   box-shadow: 0 3px 5px rgb(185, 181, 181) !important;
 }
@@ -66,6 +70,14 @@
 
 .margin-left-24px {
   margin-left: 24px;
+}
+
+.margin-rigth-20px {
+  margin-right: 20px;
+}
+
+.margin-rigth-10px {
+  margin-right: 10px !important;
 }
 
 .margin-top-30px-important {
@@ -103,16 +115,34 @@
   display: none !important;
 }
 
-.btn-close {
-  display: inline-block;
-  font-size: 5px;
-  float: right;
+.btn-action {
+  display: block;
+  font-size: 20px;
+  float: none !important;
+  margin-bottom: 10px;
+  width: 20px;
+  height: 20px;
 }
 
 .item-view {
   padding: 10px;
   text-align: center;
+}
+
+.icon-big {
   font-size: 100px;
+  margin-top: 50px;
+}
+
+.author {
+  padding: 10px;
+  font-size: 14px;
+  margin-top: 20px;
+}
+
+.item-action {
+  float: right;
+  margin-left: -15px;
 }
 
 .item-title {
@@ -179,4 +209,20 @@
 
 .margin-bot {
   margin: 0 0 20px !important;
+}
+
+.list_viewer {
+  margin-top: 20px;
+  display: inline-block;
+}
+
+.viewer {
+  display: inline-block;
+  margin-right: 20px;
+  margin-bottom: 10px; 
+}
+
+.viewer-remove {
+  margin-left: 10px;
+  cursor: pointer;
 }

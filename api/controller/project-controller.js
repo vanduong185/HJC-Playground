@@ -8,25 +8,73 @@ exports.get_project = (req, res, next) => {
   if (req.params.project_id) {
     user_id = req.params.user_id;
     project_id = req.params.project_id;
-    query_str = 'SELECT * FROM projects WHERE author_id = ? AND project_id = ?';
-    db.query(query_str, [user_id, project_id], function (err, result) {
-      if (result.length > 0) {
-        project = result[0];
-        filepath = './public/data/' + project.author_id + '/' + project.project_name;
-        res.status(200).json({
-          project: result[0],
-          data: parseDir.parseDirectory(filepath, project.project_name)
-        })
-      }
-      else {
-        res.status(200).json({
-          message: "Can not found project"
-        })
-      }
-
+    query_str = "SELECT * FROM shared_projects WHERE project_id = ?";
+    db.query(query_str, [project_id], function (err, result) {
       if (err) {
         res.status(200).json({
           message: "Error"
+        })
+      }
+      else if (result.length > 0) {
+        query_str = 'SELECT * FROM projects p JOIN shared_projects sp ON p.project_id = sp.project_id JOIN users u ON sp.viewer_id = u.user_id WHERE p.author_id = ? AND p.project_id = ?';
+        db.query(query_str, [user_id, project_id], function (err, result) {
+          if (result.length > 0) {
+            var viewers = [];
+            result.map(ojb => {
+              viewers.push(ojb.email);
+            })
+            project_data = {
+              project_id: result[0].project_id,
+              project_name: result[0].project_name,
+              author_id: result[0].author_id,
+              viewers: viewers
+            }
+            filepath = './public/data/' + project_data.author_id + '/' + project_data.project_name;
+            res.status(200).json({
+              project: project_data,
+              data: parseDir.parseDirectory(filepath, project_data.project_name)
+            })
+          }
+          else {
+            res.status(200).json({
+              message: "Can not found project"
+            })
+          }
+
+          if (err) {
+            res.status(200).json({
+              message: "Error"
+            })
+          }
+        })
+      }
+      else {
+        query_str = 'SELECT * FROM projects WHERE author_id = ? AND project_id = ?';
+        db.query(query_str, [user_id, project_id], function (err, result) {
+          if (result.length > 0) {
+            project_data = {
+              project_id: result[0].project_id,
+              project_name: result[0].project_name,
+              author_id: result[0].author_id,
+              viewers: []
+            }
+            filepath = './public/data/' + project_data.author_id + '/' + project_data.project_name;
+            res.status(200).json({
+              project: project_data,
+              data: parseDir.parseDirectory(filepath, project_data.project_name)
+            })
+          }
+          else {
+            res.status(200).json({
+              message: "Can not found project"
+            })
+          }
+
+          if (err) {
+            res.status(200).json({
+              message: "Error"
+            })
+          }
         })
       }
     })
@@ -57,7 +105,6 @@ exports.get_project = (req, res, next) => {
 }
 
 exports.create_project = (req, res, next) => {
-  console.log(req.body);
   user_id = req.params.user_id;
   new_project = req.body.new_project;
   query_str = ' INSERT INTO projects (project_name, author_id) VALUES ?';
@@ -104,7 +151,6 @@ exports.create_project = (req, res, next) => {
 }
 
 exports.delete_project = (req, res, next) => {
-  console.log(req.params);
   user_id = req.params.user_id;
   project_id = req.params.project_id;
   project_name = "";
@@ -133,7 +179,6 @@ exports.delete_project = (req, res, next) => {
       })
     }
     if (result) {
-      console.log(result);
       project_path = './public/data/' + user_id + '/' + project_name;
       fsex.remove(project_path, function (err) {
         if (err) {
@@ -144,6 +189,56 @@ exports.delete_project = (req, res, next) => {
         else {
           res.status(200).json({
             message: "deleted"
+          })
+        }
+      })
+    }
+  })
+}
+
+exports.share_project = (req, res, next) => {
+  viewers = req.body.viewers;
+  user_id = req.params.user_id;
+  project_id = req.params.project_id;
+
+  query_str = "DELETE FROM shared_projects WHERE project_id = ?";
+  db.query(query_str, [project_id], function (err) {
+    if (err) {
+      res.status(200).json({
+        message: "Error"
+      })
+    }
+    else if (viewers.length == 0) {
+      res.status(200).json({
+        message: "Success"
+      })
+    }
+    else {
+      query_str = "SELECT user_id FROM users WHERE email IN (?)";
+      db.query(query_str, [viewers], function (err, result) {
+        if (err || !result || result.length != viewers.length) {
+          res.status(200).json({
+            message: "Error"
+          })
+        }
+        else {
+          values = [];
+          for (i = 0; i < result.length; i++) {
+            tmp = [project_id, result[i].user_id];
+            values.push(tmp);
+          }
+          query_str = "INSERT INTO shared_projects (project_id, viewer_id) VALUE ?";
+          db.query(query_str, [values], function (err, result) {
+            if (err || !result) {
+              res.status(200).json({
+                message: "Error"
+              })
+            }
+            else {
+              res.status(200).json({
+                message: "Success"
+              })
+            }
           })
         }
       })

@@ -37,7 +37,7 @@
     <div class="library">
       <div class="m-header">
         <div class="input-group">
-          <input type="text" class="form-control" ng-model="keyword" placeholder="Search library...">
+          <input type="text" class="form-control" ng-model="keyword" ng-keyup="$event.which == 13 ? searchLibrary() : null" placeholder="Search library...">
           <span class="input-group-btn">
             <button class="btn blue bold" type="button" ng-click="searchLibrary()">Search</button>
           </span>
@@ -63,7 +63,6 @@
         <button class="m-header-action btn blue bold" type="button" ng-click="clearConsole()">Clear</button>
       </div>
       <div class="m-content" id="console">
-
       </div>
     </div>
   </div>

@@ -1,8 +1,9 @@
 myApp = angular.module('app', ['Authentication', 'ngCookies', 'ui.router', 'ui.bootstrap', 'ngBootbox']);
 
-myApp.run(["$rootScope", "$location", '$cookieStore', '$http',
-  function ($rootScope, $location, $cookieStore, $http) {
+myApp.run(["$rootScope", "$location", '$cookieStore', '$http', '$state',
+  function ($rootScope, $location, $cookieStore, $http, $state) {
     $rootScope.globals = $cookieStore.get("globals") || {};
+    $rootScope.state = $state;
     if ($rootScope.globals.currentUser) {
       $http.defaults.headers.common["Authorization"] = "Basic " + $rootScope.globals.currentUser.authdata; // jshint ignore:line
     }

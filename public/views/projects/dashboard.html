@@ -1,0 +1,30 @@
+<div class="portlet light margin-top-30px-important">
+  <div class="portlet-title">
+    <div class="caption">Project management</div>
+  </div>
+  <div class="portlet-body">
+    <div class="row">
+      <div class="col-md-3 col-sm-3 col-xs-3">
+        <div class="input-group margin-bot">
+          <input type="text" class="form-control" ng-model="new_project.name" ng-keyup="$event.which == 13 ? createProject() : null" placeholder="Enter project name...">
+          <span class="input-group-btn">
+            <button class="btn blue bold" type="button" ng-click="createProject()">Create</button>
+          </span>
+        </div>
+        <ul class="nav nav-tabs tabs-left padding-top-bottom-50px bold">
+          <li ng-class="{'active': state.current.name == 'projects.dashboard.list'}">
+            <a ui-sref="projects.dashboard.list"> My projects </a>
+          </li>
+          <li ng-class="{'active': state.current.name == 'projects.dashboard.shared_project'}">
+            <a ui-sref="projects.dashboard.shared_project"> Shared with me </a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-9 col-sm-9 col-xs-9">
+        <div class="tab-content">
+          <div ui-view></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
