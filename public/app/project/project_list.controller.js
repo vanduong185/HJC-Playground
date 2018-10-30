@@ -1,28 +1,9 @@
-myApp.controller('Project_ListController', ['projects_data', 'ProjectAPI', '$rootScope', '$scope', '$state', '$http', '$ngBootbox',
-  function (projects_data, ProjectAPI, $rootScope, $scope, $state, $http, $ngBootbox) {
-    console.log(projects_data);
+myApp.controller('Project_ListController', ['projects_data', 'ProjectAPI', '$rootScope', '$scope', '$state', '$http', '$ngBootbox', '$uibModal',
+  function (projects_data, ProjectAPI, $rootScope, $scope, $state, $http, $ngBootbox, $uibModal) {
     $scope.projects = projects_data.data.projects;
-
-    $scope.new_project = {
-      name: ""
-    }
-
-    $scope.createProject = function () {
-      ProjectAPI.createProject($scope.new_project).success(function (response) {
-        console.log(response);
-        if(response.message == 'success') {
-          $state.reload($state.current);
-        }
-        else {
-          toastr.error("Something went wrong !");
-        }
-
-      })
-    }
 
     $scope.deleteProject = function (project_id) {
       ProjectAPI.deleteProject(project_id).success(function (response) {
-        console.log(response);
         if(response.message == 'deleted') {
           $state.reload($state.current);
         }
@@ -40,6 +21,18 @@ myApp.controller('Project_ListController', ['projects_data', 'ProjectAPI', '$roo
           }
         });
       });
+    }
+
+    $scope.showShareModal = function(project) {
+      $uibModal.open({
+        templateUrl: 'views/projects/share.html',
+        resolve: {
+          project_data: ['ProjectAPI', function (ProjectAPI) {
+            return ProjectAPI.getProject(project.project_id);
+          }]
+        },
+        controller: "Project_ShareController"
+      })
     }
   }
 ])

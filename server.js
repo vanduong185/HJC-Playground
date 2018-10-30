@@ -3,6 +3,7 @@ var bodyParser = require('body-parser');
 var db = require('./hjc_db');
 var crypto = require('./crypto');
 var projectRoutes = require('./api/routes/project');
+var sharedProjectRoutes = require('./api/routes/shared_project');
 var playgroundRoutes = require('./api/routes/playground');
 var jwt = require('jsonwebtoken');
 var config = require('./config');
@@ -82,6 +83,7 @@ app.get("/users", function (req, res) {
 
 app.use("/projects", projectRoutes);
 app.use("/playground", playgroundRoutes);
+app.use("/shared_projects", sharedProjectRoutes);
 
 app.listen(8081, function () {
   console.log('Example app listening on port 8081!');

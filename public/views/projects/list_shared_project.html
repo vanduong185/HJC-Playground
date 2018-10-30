@@ -1,0 +1,17 @@
+<div class="row">
+  <div ng-repeat="shared_project in shared_projects" class="col-md-3 col-sm-6">
+    <div class="item">
+      <div class="item-view">
+        <i class="fa fa-folder blue icon-big"></i>
+        <i class="fa fa-user gray author">
+          <span>{{shared_project.author_email}}</span>
+        </i>
+      </div>
+      <div class="item-title">
+        <a ui-sref="projects.show_shared_project({project_id: shared_project.project_id})" title="View project">
+          {{shared_project.project_name}}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
