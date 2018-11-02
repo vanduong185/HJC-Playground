@@ -227,3 +227,11 @@
   margin-left: 10px;
   cursor: pointer;
 }
+
+.my-login {
+  background-color: #fff !important;
+}
+
+.padding-top-8px {
+  padding-top: 8px;
+}

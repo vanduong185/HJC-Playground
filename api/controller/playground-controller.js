@@ -4,7 +4,6 @@ var uuid = require("uuid");
 var parser = require('../middleware/parse-dir');
 
 exports.edit_project = (req, res, next) => {
-  console.log(req.body);
   var data = req.body;
   var root_dir = './public/data/' + data.user_id + "/";
   switch (data.flag) {
@@ -85,7 +84,6 @@ exports.edit_project = (req, res, next) => {
 };
 
 exports.get_guest_project = (req, res, next) => {
-  console.log(req);
   guest_project_name = uuid();
   guest_project_path = './public/data/guest/' + guest_project_name;
   file_index = guest_project_path + '/' + "index.html";

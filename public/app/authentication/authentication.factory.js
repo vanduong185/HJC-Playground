@@ -1,9 +1,8 @@
 module_authen.factory("Auth",
   ["Base64", "$http", "$cookieStore", "$rootScope", "$timeout", "$uibModal",
-  function (Base64, $http, $cookieStore, $rootScope, $timeout, $uibModal) {
-    var service = {};
-    service.Login = function (username, password, callback) {
-      $timeout(function(){
+    function (Base64, $http, $cookieStore, $rootScope, $timeout, $uibModal) {
+      var service = {};
+      service.Login = function (username, password, callback) {
         var credential = {
           username: username,
           password: password
@@ -15,52 +14,50 @@ module_authen.factory("Auth",
           data: credential,
           headers: { 'Content-Type': 'application/json' }
         }).then(function Success(res) {
-          console.log(res);
           var response = {};
-          if (res.data.message === "success") {
-            response.success = true;
-            $rootScope.globals.currentUserInfo = res.data.data;
-            callback(response);
-          }
-          else {
-            response.message = "Username or password is incorrect";
-            callback(response);
-          }
+          $timeout(function () {
+            if (res.data.message === "success") {
+              $rootScope.globals.currentUserInfo = res.data.data;
+              response.success = true;
+              callback(response);
+            }
+            else {
+              response.message = "Username or password is incorrect";
+              callback(response);
+            }
+          }, 2000);
         }, function Error(res) {
-          console.log(res);
           response.message = "Username or password is incorrect";
           callback(response);
         });
-      }, 1000);
-    };
+      };
 
-    service.SetCredentials = function (username, password) {
-      var authdata = Base64.encode(username + ":" + password);
-      $rootScope.globals.currentUser = { username: username, authdata: authdata }
+      service.SetCredentials = function (username, password) {
+        var authdata = Base64.encode(username + ":" + password);
+        $rootScope.globals.currentUser = { username: username, authdata: authdata }
+        $http.defaults.headers.common["Authorization"] = "Basic " + authdata;
+        $cookieStore.put("globals", $rootScope.globals);
+      };
 
-      $http.defaults.headers.common["Authorization"] = "Basic " + authdata;
-      $cookieStore.put("globals", $rootScope.globals);
-    };
+      service.ClearCredentials = function () {
+        $rootScope.globals = {};
+        $cookieStore.remove("globals");
+        $http.defaults.headers.common.Authorization = "Basic ";
+      };
 
-    service.ClearCredentials = function () {
-      $rootScope.globals = {};
-      $cookieStore.remove("globals");
-      $http.defaults.headers.common.Authorization = "Basic ";
-    };
+      service.IsAuthenticated = function () {
+        return $rootScope.globals.currentUser
+      }
 
-    service.IsAuthenticated = function() {
-      return $rootScope.globals.currentUser
-    }
-
-    service.showLoginModal = function() {
+      service.showLoginModal = function () {
         $uibModal.open({
-          templateUrl: 'views/login.html',
+          templateUrl: 'views/users/login.html',
           controller: "LoginController"
         })
-    }
+      }
 
-    return service;
-  }]);
+      return service;
+    }]);
 
 module_authen.factory("Base64", function () {
   var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
@@ -107,7 +104,7 @@ module_authen.factory("Base64", function () {
       var base64test = /[^A-Za-z0-9\+\/\=]/g;
       if (base64test.exec(input)) {
         window.alert("There were invalid base64 characters in the input text.\n" +
-          "Valid base64 characters are A-Z, a-z, 0-9, "+", "/",and '='\n" +
+          "Valid base64 characters are A-Z, a-z, 0-9, " + ", " / ",and '='\n" +
           "Expect errors in decoding.");
       }
       input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");

@@ -13,16 +13,17 @@
         <li>
           <a ui-sref="playground.guest" class="menubar-center">Playground</a>
         </li>
-        <li ng-if="globals.currentUser">
+        <li ng-if="globals.currentUserInfo">
           <a ui-sref="projects.dashboard.list" class="menubar-center" title="Projects">
             <i class="fa fa-folder"></i>
           </a>
         </li>
-        <li ng-if="globals.currentUser" class="dropdown dropdown-user">
+        <li ng-if="globals.currentUserInfo" class="dropdown dropdown-user">
           <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
             <div class="dropdown-user-inner">
-              <span class="username username-hide-on-mobile"> Nick </span>
-              <img alt="" src="../lib/metronic/assets/layouts/layout7/img/avatar1.jpg" /> </div>
+              <span class="username username-hide-on-mobile"> {{globals.currentUserInfo.nickname}} </span>
+              <img alt="" ng-src="{{globals.currentUserInfo.avatar || 'lib/images/avatar.png'}}">
+            </div>  
           </a>
           <ul class="dropdown-menu dropdown-menu-default">
             <li>
