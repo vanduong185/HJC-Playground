@@ -1,5 +1,6 @@
-angular.module('app').controller("HeaderController", ['Auth', '$location', '$rootScope', '$scope', '$http', '$uibModal',
-  function(Auth, $location, $rootScope, $scope, $http, $uibModal) {
+angular.module('app').controller("HeaderController", ['Auth', '$state', '$location', '$rootScope', '$scope', '$http', '$uibModal',
+  function(Auth, $state, $location, $rootScope, $scope, $http, $uibModal) {
+
     $scope.showLoginModal = function () {
       Auth.showLoginModal();
     }

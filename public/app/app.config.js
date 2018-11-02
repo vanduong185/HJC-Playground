@@ -16,7 +16,7 @@ myApp.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
   var signUpState = {
     name: 'signUp',
     url: '/signUp',
-    templateUrl: 'views/signUpForm.html',
+    templateUrl: 'views/users/signUpForm.html',
     controller: "SignUpController"
   };
   
