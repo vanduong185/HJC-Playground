@@ -19,7 +19,14 @@ myApp.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
     templateUrl: 'views/users/signUpForm.html',
     controller: "SignUpController"
   };
+  var profileState = {
+    name: 'profile',
+    url: '/profile',
+    templateUrl: 'views/profile/profile.html',
+    controller: "ProfileController"
+  }
   
+  $stateProvider.state(profileState);
   $stateProvider.state(signUpState);
   $stateProvider.state(usersState);
   $stateProvider.state(homeState);
