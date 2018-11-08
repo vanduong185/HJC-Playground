@@ -17,6 +17,7 @@ module_authen.factory("Auth",
           var response = {};
           $timeout(function () {
             if (res.data.message === "success") {
+              localStorage.setItem("data", res.data.data);       
               $rootScope.globals.currentUserInfo = res.data.data;
               response.success = true;
               callback(response);
