@@ -89,17 +89,18 @@ exports.updateInfo = (req, res, next) => {
   console.log(infor);
   switch (infor.flag) {
     case "update_info": {
-      let query_str = 'Update users set nickname = ?, age = ?, jobtitle = ? where email = ?';
+      let query_str = 'Update users set nickname = ?, age = ?, jobtitle = ? where id = ?';
       var values = [
         {
           "nickname": infor.nickname,
           "age": infor.age,
           "jobtitle": infor.jobtitle,
           "email": infor.email,
+          "id": infor.id
         }
       ];
       // console.log(values[0]);
-      db.query(query_str, [values[0].nickname, values[0].age, values[0].jobtitle, values[0].email], function (err, result) {
+      db.query(query_str, [values[0].nickname, values[0].age, values[0].jobtitle, values[0].id], function (err, result) {
         if (err) {
           console.log(err);
           res.status(200).json({
@@ -116,7 +117,7 @@ exports.updateInfo = (req, res, next) => {
       break;
     }
     case "change_pass": {
-      query_str = 'SELECT * FROM users WHERE email = "' + infor.email + '"';
+      query_str = 'SELECT * FROM users WHERE id = "' + infor.id + '"';
       db.query(query_str, function (err, result) {
         if (err) {
           res.json({
@@ -129,12 +130,13 @@ exports.updateInfo = (req, res, next) => {
             if (isPassMatch) {
               crypto.cryptPassword(infor.newPass).then(function (hassPass) {
                 let query_str2 = 'Update users set password = "'
-                  + hassPass + '" WHERE email = "' + infor.email + '"';
+                  + hassPass + '" WHERE id = "' + infor.id + '"';
                 db.query(query_str2, function (err, result) {
                   if (err) {
                     console.log(err);
                     res.status(200).json({
-                      message: "Error"
+                      message: "Error",
+                      data : hassPass
                     })
                   }
                   if (result) {
