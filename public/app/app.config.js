@@ -24,7 +24,7 @@ myApp.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
     url: '/profile',
     templateUrl: 'views/profile/profile.html',
     controller: "ProfileController"
-  }
+  };
   
   $stateProvider.state(profileState);
   $stateProvider.state(signUpState);
