@@ -30,7 +30,7 @@ myApp.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
       controller: 'SharedProject_ListController'
     })
     .state('projects.show_shared_project', {
-      url: "/:project_id",
+      url: "/shared_project/:project_id",
       templateUrl: "views/projects/show_shared_project.html",
       resolve: {
         shared_project_data: ['ProjectAPI', '$stateParams', function (ProjectAPI, $stateParams) {

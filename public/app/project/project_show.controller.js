@@ -1,5 +1,5 @@
-myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'ProjectAPI', '$rootScope', '$scope', '$state', '$http', '$timeout',
-  function (project_data, libraries_data, ProjectAPI, $rootScope, $scope, $state, $http, $timeout) {
+myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'ProjectAPI', '$rootScope', '$scope', '$state', '$http', '$timeout', '$ngBootbox',
+  function (project_data, libraries_data, ProjectAPI, $rootScope, $scope, $state, $http, $timeout, $ngBootbox) {
     var user_id = $rootScope.globals.currentUserInfo.user_id;
 
     // manage libraries
@@ -16,18 +16,9 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
     var project = project_data.data.project;
     var data = project_data.data.data;
 
-    // initialize editor with CodeMirror plugin
-    var editor = CodeMirror(document.getElementById("codeeditor"), {
-      mode: "html",
-      theme: "neat",
-      tabSize: 2,
-      lineNumbers: true,
-      styleActiveLine: true,
-      matchBrackets: true,
-      extraKeys: { "Ctrl-Space": "autocomplete" }
-    });
+    // initialize treeview with jsTree plugin  
+    data.state = { opened: true };
 
-    // initialize treeview with jsTree plugin
     var tree = angular.element(document.getElementById("tree_1")).jstree({
       'core': {
         'check_callback': true,
@@ -44,15 +35,26 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
         'file-js': { icon: "fa fa-code red icon-lg" }
       },
       'plugins': ['types']
+    })
+
+    // initialize editor with CodeMirror plugin
+    var editor = CodeMirror(document.getElementById("codeeditor"), {
+      mode: "htmlmixed",
+      theme: "neat",
+      tabSize: 2,
+      lineNumbers: true,
+      styleActiveLine: true,
+      matchBrackets: true,
+      extraKeys: { "Ctrl-Space": "autocomplete" }
     });
 
     // initialize result iframe
     window.addEventListener("message", function (e) {
       let log = document.createElement("div");
-      
+
       if (e.data.type == "log-msg") {
         log.className = "logger";
-        if(typeof e.data.content === "object") {
+        if (typeof e.data.content === "object") {
           log.textContent = JSON.stringify(e.data.content);
         }
         else {
@@ -61,26 +63,30 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
       }
       if (e.data.type == "error-msg") {
         log.className = "logger";
-        if(typeof e.data.content === "object") {
+        if (typeof e.data.content === "object") {
           log.textContent = JSON.stringify(e.data.content);
         }
         else {
-          log.innerHTML = '<p class="margin-bot"><strong>' + e.data.position + "</strong></p>" + '<span class="red">'+ e.data.content + "</span>";
+          log.innerHTML = '<p class="margin-bot"><strong>' + e.data.position + "</strong></p>" + '<span class="red">' + e.data.content + "</span>";
         }
       }
       document.getElementById("console").appendChild(log);
     })
     angular.element(document.getElementById('result-iframe'))[0].src = '../data/' + project.author_id + '/' + project.project_name + '/index.html';
 
-    $scope.clearConsole = function() {
+    $scope.clearConsole = function () {
       document.getElementById("console").textContent = "";
     }
- 
+
     // fire event when select file or folder on tree view, set code of file for editor 
     var selected_file = {};
     var selected_folder = {};
     angular.element(document.getElementById('tree_1')).on('select_node.jstree', function (e, data) {
       var node = data.node;
+      document.getElementById("delete-btn").classList.remove("disabled");
+      document.getElementById("rename-btn").classList.remove("disabled");
+      editor.setOption("readOnly", false);
+
       if (node.original.type != "folder") {
         switch (node.original.type) {
           case "file-html": {
@@ -104,11 +110,24 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
         selected_file.id = node.id;
         selected_folder = null;
         editor.setValue(node.original.content);
+        if (selected_file.path == project.project_name + "/index.html") {
+          document.getElementById("delete-btn").classList.add("disabled");
+          document.getElementById("rename-btn").classList.add("disabled");
+        }
+        if (selected_file.path == project.project_name + "/config.js") {
+          document.getElementById("delete-btn").classList.add("disabled");
+          document.getElementById("rename-btn").classList.add("disabled");
+          editor.setOption("readOnly", true);
+        }
       }
       else {
         selected_folder = {};
         selected_folder.path = node.original.path;
         selected_folder.id = node.id;
+        if (selected_folder.path == project.project_name) {
+          document.getElementById("delete-btn").classList.add("disabled");
+          document.getElementById("rename-btn").classList.add("disabled");
+        }
       }
     });
 
@@ -143,10 +162,16 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
               data: data_change,
               headers: { 'Content-Type': 'application/json' }
             }).then(function Success(res) {
-              setTimeout(function () {
-                angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
-              }, 500) //set timeout for reloading iframe
+              if (res.data.message == "Success") {
+                setTimeout(function () {
+                  angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
+                }, 500) //set timeout for reloading iframe
+              }
+              else {
+                toastr.error("Something went wrong.");
+              }
             }, function Error(res) {
+              toastr.error("Something went wrong.");
             });
           }
         }
@@ -171,36 +196,47 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
           if (e.keyCode === 13) {
             var filename = input.value;
             var filetype = null;
-            if (filename.includes(".html")) {
-              filetype = "file-html";
-            }
-            else if (filename.includes(".css")) {
-              filetype = "file-css";
-            }
-            else if (filename.includes(".js")) {
-              filetype = "file-js";
-            }
-            else {
-              filetype = "file";
-            }
-            angular.element(document.getElementById('tree_1')).jstree(
-              "create_node", selected_folder.id, { "text": filename, "type": filetype, content: " ", path: selected_folder.path + "/" + filename }, "last", function () {
-                var new_file = {
-                  user_id: user_id,
-                  project: project,
-                  flag: "create file",
-                  file_path: selected_folder.path + "/" + filename,
-                  filename: filename,
-                  content: " "
+            if (filename.length > 0) {
+              if (filename.includes(".html")) {
+                filetype = "file-html";
+              }
+              else if (filename.includes(".css")) {
+                filetype = "file-css";
+              }
+              else if (filename.includes(".js")) {
+                filetype = "file-js";
+              }
+              else {
+                filetype = "file";
+              }
+
+              var new_file = {
+                user_id: user_id,
+                project: project,
+                flag: "create file",
+                file_path: selected_folder.path + "/" + filename,
+                filename: filename,
+                content: " "
+              }
+
+              $http({
+                method: "POST",
+                url: '/playground',
+                data: new_file,
+                headers: { 'Content-Type': 'application/json' }
+              }).then(function Success(res) {
+                if (res.data.message == "Error") {
+                  toastr.error("Something went wrong.");
                 }
-                $http({
-                  method: "POST",
-                  url: '/playground',
-                  data: new_file,
-                  headers: { 'Content-Type': 'application/json' }
-                }).then(function Success(res) {
-                })
-              });
+                else if (res.data.message == "Already exist") {
+                  toastr.error("This file already exists.");
+                }
+                else {
+                  angular.element(document.getElementById('tree_1')).jstree(
+                    "create_node", selected_folder.id, { "text": filename, "type": filetype, content: " ", path: selected_folder.path + "/" + filename }, "last", function () { });
+                }
+              })
+            }
           }
         });
       }
@@ -222,37 +258,52 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
         input.addEventListener("keypress", function (e) {
           if (e.keyCode === 13) {
             foldername = input.value;
-            angular.element(document.getElementById('tree_1')).jstree(
-              "create_node", selected_folder.id, { "text": foldername, "type": "folder", path: selected_folder.path + "/" + foldername }, "last", function () {
-                var new_folder = {
-                  user_id: user_id,
-                  project: project,
-                  flag: "create folder",
-                  file_path: selected_folder.path + "/" + foldername,
-                  foldername: foldername
+
+            if (foldername.length > 0) {
+              var new_folder = {
+                user_id: user_id,
+                project: project,
+                flag: "create folder",
+                file_path: selected_folder.path + "/" + foldername,
+                foldername: foldername
+              }
+              $http({
+                method: "POST",
+                url: '/playground',
+                data: new_folder,
+                headers: { 'Content-Type': 'application/json' }
+              }).then(function Success(res) {
+                if (res.data.message == "Error") {
+                  toastr.error("Something went wrong.");
                 }
-                $http({
-                  method: "POST",
-                  url: '/playground',
-                  data: new_folder,
-                  headers: { 'Content-Type': 'application/json' }
-                }).then(function Success(res) {
-                })
-              });
+                else if (res.data.message == "Already exist") {
+                  toastr.error("This file already exists.");
+                }
+                else {
+                  angular.element(document.getElementById('tree_1')).jstree(
+                    "create_node", selected_folder.id, { "text": foldername, "type": "folder", path: selected_folder.path + "/" + foldername }, "last", function () { });
+                }
+              })
+            }
           }
         });
       }
     }
 
     //fire event delete a file or a folder
-    angular.element(document.getElementById('tree_1')).on('delete_node.jstree', function (e, data) {
-      node = data.node;
-      if (node.original.type == "folder") {
+    $scope.showDeleteModal = function () {
+      $ngBootbox.confirm('Are you sure delete this file/folder ?').then(function() {
+        $scope.delete();
+      });
+    }
+
+    $scope.delete = function () {
+      if (selected_folder) {
         delete_folder = {
           user_id: user_id,
           project: project,
           flag: "delete folder",
-          file_path: node.original.path
+          file_path: selected_folder.path
         };
         $http({
           method: "POST",
@@ -260,17 +311,25 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
           data: delete_folder,
           headers: { 'Content-Type': 'application/json' }
         }).then(function Success(res) {
-          setTimeout(function () {
-            angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
-          }, 500) //set timeout for reloading iframe
-        })
+          if (res.data.message == "Success") {
+            angular.element(document.getElementById('tree_1')).jstree("delete_node", selected_folder.id);
+            setTimeout(function () {
+              angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
+            }, 500) //set timeout for reloading iframe
+          }
+          else {
+            toastr.error("Something went wrong.");
+          }
+        }, function Error(res) {
+          toastr.error("Something went wrong.");
+        });
       }
       else {
         delete_file = {
           user_id: user_id,
           project: project,
           flag: "delete file",
-          file_path: node.original.path
+          file_path: selected_file.path
         };
         $http({
           method: "POST",
@@ -278,19 +337,18 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
           data: delete_file,
           headers: { 'Content-Type': 'application/json' }
         }).then(function Success(res) {
-          setTimeout(function () {
-            angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
-          }, 500) //set timeout for reloading iframe
-        })
-      }
-    });
-
-    $scope.delete = function () {
-      if (selected_folder) {
-        angular.element(document.getElementById('tree_1')).jstree("delete_node", selected_folder.id);
-      }
-      else {
-        angular.element(document.getElementById('tree_1')).jstree("delete_node", selected_file.id);
+          if (res.data.message == "Success") {
+            angular.element(document.getElementById('tree_1')).jstree("delete_node", selected_file.id);
+            setTimeout(function () {
+              angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
+            }, 500) //set timeout for reloading iframe
+          }
+          else {
+            toastr.error("Something went wrong.");
+          }
+        }, function Error(res) {
+          toastr.error("Something went wrong.");
+        });
       }
     }
 
@@ -314,12 +372,43 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
             node = angular.element(
               document.getElementById("tree_1")
             ).jstree(true)._model.data[selected_folder.id];
-            node.original.text = foldername;
-            path = node.original.path;
-            arr = path.split("/");
-            arr[arr.length - 1] = foldername;
-            node.original.path = arr.join("/");
-            angular.element(document.getElementById('tree_1')).jstree("rename_node", selected_folder.id, foldername);
+
+            if (foldername.length > 0 && node.original.text != foldername) {
+              node.original.text = foldername;
+              path = node.original.path;
+              old_path = node.original.path;
+              arr = path.split("/");
+              arr[arr.length - 1] = foldername;
+              node.original.path = arr.join("/");
+              rename_folder = {
+                user_id: user_id,
+                project: project,
+                flag: "rename folder",
+                new_path: node.original.path,
+                old_path: old_path
+              };
+              $http({
+                method: "POST",
+                url: '/playground',
+                data: rename_folder,
+                headers: { 'Content-Type': 'application/json' }
+              }).then(function Success(res) {
+                if (res.data.message == "Already exist") {
+                  toastr.error("This foldername already exists.");
+                }
+                else if (res.data.message == "Error") {
+                  toastr.error("Something went wrong.");
+                }
+                else {
+                  angular.element(document.getElementById('tree_1')).jstree("rename_node", selected_folder.id, foldername);
+                  setTimeout(function () {
+                    angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
+                  }, 500) //set timeout for reloading iframe
+                }
+              }, function Error(res) {
+                toastr.error("Something went wrong.");
+              });
+            }
           }
         });
       }
@@ -339,83 +428,71 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
           if (e.keyCode === 13) {
             filename = input.value;
             filetype = null;
-            if (filename.includes(".html")) {
-              filetype = "file-html";
-              editor.setOption("mode", "htmlmixed");
-            }
-            else if (filename.includes(".css")) {
-              filetype = "file-css";
-              editor.setOption("mode", "css");
-            }
-            else if (filename.includes(".js")) {
-              filetype = "file-js";
-              editor.setOption("mode", "javascript");
-            }
-            else {
-              filetype = "file";
-              editor.setOption("mode", "text/plain");
-            }
+
             node = angular.element(
               document.getElementById("tree_1")
             ).jstree(true)._model.data[selected_file.id];
-            node.original.type = filetype;
-            node.original.text = filename;
-            path = node.original.path;
-            arr = path.split("/");
-            arr[arr.length - 1] = filename;
-            node.original.path = arr.join("/");
-            angular.element(
-              document.getElementById("tree_1")
-            ).jstree(true).set_type(selected_file.id, filetype);
-            angular.element(document.getElementById('tree_1')).jstree("rename_node", selected_file.id, filename);
+
+            if (filename.length > 0 && filename != node.original.text) {
+              if (filename.includes(".html")) {
+                filetype = "file-html";
+                editor.setOption("mode", "htmlmixed");
+              }
+              else if (filename.includes(".css")) {
+                filetype = "file-css";
+                editor.setOption("mode", "css");
+              }
+              else if (filename.includes(".js")) {
+                filetype = "file-js";
+                editor.setOption("mode", "javascript");
+              }
+              else {
+                filetype = "file";
+                editor.setOption("mode", "text/plain");
+              }
+
+              node.original.type = filetype;
+              node.original.text = filename;
+              path = node.original.path;
+              old_path = node.original.path;
+              arr = path.split("/");
+              arr[arr.length - 1] = filename;
+              node.original.path = arr.join("/");
+              rename_file = {
+                user_id: user_id,
+                project: project,
+                flag: "rename file",
+                new_path: node.original.path,
+                old_path: old_path
+              };
+              $http({
+                method: "POST",
+                url: '/playground',
+                data: rename_file,
+                headers: { 'Content-Type': 'application/json' }
+              }).then(function Success(res) {
+                if (res.data.message == "Already exist") {
+                  toastr.error("This foldername already exists.");
+                }
+                else if (res.data.message == "Error") {
+                  toastr.error("Something went wrong.");
+                }
+                else {
+                  angular.element(
+                    document.getElementById("tree_1")
+                  ).jstree(true).set_type(selected_file.id, filetype);
+                  angular.element(document.getElementById('tree_1')).jstree("rename_node", selected_file.id, filename);
+                  setTimeout(function () {
+                    angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
+                  }, 500) //set timeout for reloading iframe
+                }
+              }, function Error(res) {
+                toastr.error("Something went wrong.");
+              });
+            }
           }
         });
       }
     }
-
-    angular.element(document.getElementById('tree_1')).on('rename_node.jstree', function (e, data) {
-      node = data.node;
-      arr = node.original.path.split("/");
-      arr[arr.length - 1] = data.old;
-      old_path = arr.join("/");
-      if (node.original.type == "folder") {
-        rename_folder = {
-          user_id: user_id,
-          project: project,
-          flag: "rename folder",
-          new_path: node.original.path,
-          old_path: old_path
-        };
-        $http({
-          method: "POST",
-          url: '/playground',
-          data: rename_folder,
-          headers: { 'Content-Type': 'application/json' }
-        }).then(function Success(res) {
-          setTimeout(function () {
-            angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
-          }, 500) //set timeout for reloading iframe
-        })
-      }
-      else {
-        rename_file = {
-          user_id: user_id,
-          project: project,
-          flag: "rename file",
-          new_path: node.original.path,
-          old_path: old_path
-        };
-        $http({
-          method: "POST",
-          url: '/playground',
-          data: rename_file,
-          headers: { 'Content-Type': 'application/json' }
-        }).then(function Success(res) {
-          setTimeout(function () {
-            angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
-          }, 500) //set timeout for reloading iframe
-        })
-      }
-    });
   }
 ]);
