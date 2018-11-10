@@ -8,8 +8,11 @@ var playgroundRoutes = require('./api/routes/playground');
 var userRoutes = require('./api/routes/user');
 var jwt = require('jsonwebtoken');
 var config = require('./config');
+var multer = require('multer');
+
 
 var app = express();
+app.use(multer({dest:'./uploads'}).any());
 
 app.use(express.static(__dirname + "/public"));
 app.use(bodyParser.urlencoded({ extended: false }));

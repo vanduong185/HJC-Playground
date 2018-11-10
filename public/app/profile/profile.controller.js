@@ -1,25 +1,21 @@
-myApp.directive('fileInput', ['$parse', function ($parse) {
-    return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {
-           var model = $parse(attrs.fileinput);
-           var modelSetter = model.assign;
-           
-           element.bind('change', function() {
-              scope.$apply(function() {
-                 modelSetter(scope, element[0].files[0]);
-              });
-           });
-        }
-     };
- }]).
-controller('ProfileController', ['$scope', '$state', '$http', '$rootScope','$cookieStore',
+myApp.directive('fileModel', ['$parse', function($parse){
+	return {
+		restrict: 'A',
+		link: function(scope, element, attrs){
+			var model = $parse(attrs.fileModel);
+			var modelSetter = model.assign;
+
+			element.bind('change', function(){
+				scope.$apply(function(){
+					modelSetter(scope, element[0].files[0]);
+				})
+			})
+		}
+	}
+}]);
+myApp.controller('ProfileController', ['$scope', '$state', '$http', '$rootScope','$cookieStore',
   function ($scope, $state, $http, $rootScope, $cookieStore ) {
-    // localStorage.setItem("aaa", $rootScope.globals.currentUserInfo);
-    // console.log(localStorage.getItem("aaa").age);
-    // console.log($rootScope.globals.currentUserInfo.age);
     $rootScope.globals = $cookieStore.get('globals');
-    // console.log($cookieStore.get('globals').currentUserInfo.age);
     $scope.email = $rootScope.globals.currentUserInfo.email;
     if($rootScope.globals.currentUserInfo.nickname!=null){
         $scope.nickname = $rootScope.globals.currentUserInfo.nickname
@@ -40,7 +36,7 @@ controller('ProfileController', ['$scope', '$state', '$http', '$rootScope','$coo
 					nickname: $scope.nickname,
                     jobtitle: $scope.jobtitle,
                     age: $scope.age,
-                    id : $scope.id
+                    id : $rootScope.globals.currentUserInfo.user_id
 				}
 
 				$http.post("users/profile", infor).then(function Success(res) {
@@ -73,7 +69,7 @@ controller('ProfileController', ['$scope', '$state', '$http', '$rootScope','$coo
                             email: $rootScope.globals.currentUserInfo.email,
                             currentPass: $scope.currentPass,
                             newPass:  $scope.newPass,
-                            id : $scope.id
+                            id : $rootScope.globals.currentUserInfo.user_id
                         }   
                         $http.post("users/profile", infor).then(function Success(res) {
                             console.log("haha");
@@ -103,58 +99,31 @@ controller('ProfileController', ['$scope', '$state', '$http', '$rootScope','$coo
             }
         }
     }
-    $scope.filesChanged = function(elm){
-        $scope.files = elm.files
-        $scope.$apply();
-    }
-    $scope.updateAva = function(){
-        var fd = new FormData()
-        angular.forEach($scope.files,function(file){
-            fd.append('file',file)
-        })
-        $http.post("users/profile",fd, {
-            transformRequest: angular.identity,
-            headers: {
-                'Content-Type': undefined
+    $scope.customer = {};
+	$scope.Submit = function(){
+        var data = $scope.customer;
+        var fd = new FormData();
+		for(var key in data)
+            fd.append(key, data[key]);
+            fd.append("id",$rootScope.globals.currentUserInfo.user_id);
+		$http.post('users/profile', fd, {
+			transformRequest: angular.indentity,
+			headers: { 'Content-Type': undefined }
+		}).then(function Success(res) {
+            console.log("haha");
+            console.log(res.data.message);
+            if(res.data.message=="Success"){
+                $rootScope.globals.currentUserInfo.avatar = res.data.data;
+                $cookieStore.remove("globals");
+                $cookieStore.put("globals", $rootScope.globals);
+                $state.reload($state.current);
+                toastr.success("Change successfully.");
             }
-        }).success(console.log("upload")).error(console.log("err"));
-    }
-    // $scope.uploadFile = function(files) {
-    //     var fd = new FormData();
-    //     //Take the first selected file
-    //     fd.append("file", files[0]);
-    
-    //     $http.post("users/profile", fd, {
-    //         withCredentials: true,
-    //         headers: {'Content-Type': undefined },
-    //         transformRequest: angular.identity
-    //     }).success(console.log("upload")).error(console.log("err"));
-    
-    // };
-    // $scope.updateAva = function(){
-    //     var fd = new FormData();
-    
-    //     fd.append("file", files);
-
-    //     var infor = {
-    //         flag: "avatar",
-    //         email: $rootScope.globals.currentUserInfo.email,
-    //         picture: fd
-    //     }
-    //     $http.post("users/profile", $scope.picture, {
-    //         headers: {
-    //             'Content-Type': mutipart/form-data
-    //         }
-    //     }).success(console.log("upload")).error(console.log("err"));
-    //     // $http.post("users/profile", infor, function (res) {
-    //     //     console.log("haha")
-    //     //     console.log(res);
-    //     //     if(res=="Success"){
-    //     //     }
-    //     //     if(res == "Error"){
-    //     //     }
-    //     //     location.reload();
-    //     // });
-    // }
+            else{
+                $state.reload($state.current);
+                toastr.error(res.data.message);
+            }
+        });
+	}
   }
 ]);

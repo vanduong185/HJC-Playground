@@ -1,6 +1,9 @@
 var db = require("../../hjc_db");
 var crypto = require("../../crypto");
 var jwt = require("jsonwebtoken");
+var express = require('express'),
+    fs = require('fs')
+    url = require('url');
 
 exports.create_user = (req, res, next) => {
   var infor = req.body.user;
@@ -86,10 +89,9 @@ exports.login = (req, res, next) => {
 
 exports.updateInfo = (req, res, next) => {
   var infor = req.body;
-  console.log(infor);
   switch (infor.flag) {
     case "update_info": {
-      let query_str = 'Update users set nickname = ?, age = ?, jobtitle = ? where id = ?';
+      let query_str = 'Update users set nickname = ?, age = ?, jobtitle = ? where user_id = ?';
       var values = [
         {
           "nickname": infor.nickname,
@@ -117,7 +119,7 @@ exports.updateInfo = (req, res, next) => {
       break;
     }
     case "change_pass": {
-      query_str = 'SELECT * FROM users WHERE id = "' + infor.id + '"';
+      query_str = 'SELECT * FROM users WHERE user_id = "' + infor.id + '"';
       db.query(query_str, function (err, result) {
         if (err) {
           res.json({
@@ -130,19 +132,19 @@ exports.updateInfo = (req, res, next) => {
             if (isPassMatch) {
               crypto.cryptPassword(infor.newPass).then(function (hassPass) {
                 let query_str2 = 'Update users set password = "'
-                  + hassPass + '" WHERE id = "' + infor.id + '"';
+                  + hassPass + '" WHERE user_id = "' + infor.id + '"';
                 db.query(query_str2, function (err, result) {
                   if (err) {
                     console.log(err);
                     res.status(200).json({
                       message: "Error",
-                      data : hassPass
                     })
                   }
                   if (result) {
                     // console.log(result);
                     res.status(200).json({
-                      message: "Success"
+                      message: "Success",
+                      data : hassPass
                     })
                   }
                 });
@@ -163,9 +165,39 @@ exports.updateInfo = (req, res, next) => {
       });
       break;
     }
-    case "avatar": {
-      console.log(infor.flag);
-      break;
+    default: {
+      var images = req.files;
+    if(images){
+      images.forEach(function(file) {
+        var filename = 'avatar' + '-' + file.originalname ;
+        fs.rename(file.path, 'public/lib/images/avatar/1/' + filename,function(err){
+          if(err){
+            console.log(err);
+          }
+          else{
+            var avatar = 'lib/images/avatar/1/' + filename;
+            let query_str2 = 'Update users set avatar = "'
+                  + avatar + '" WHERE user_id = "' + infor.id + '"';
+                db.query(query_str2, function (err, result) {
+                  if (err) {
+                    console.log(err);
+                    res.status(200).json({
+                      message: "Error"
+                    })
+                  }
+                  if (result) {
+                    // console.log(result);
+                    res.status(200).json({
+                      message: "Success",
+                      data : avatar
+                    })
+                  }
+                });
+          }
+        })
+      });
+    }
+    break;
     }
   }
   // console.log(infor);
