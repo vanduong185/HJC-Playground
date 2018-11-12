@@ -4,16 +4,16 @@ myApp.controller('Project_ListController', ['projects_data', 'ProjectAPI', '$roo
 
     $scope.deleteProject = function (project_id) {
       ProjectAPI.deleteProject(project_id).success(function (response) {
-        if(response.message == 'deleted') {
+        if (response.message == 'deleted') {
           $state.reload($state.current);
         }
       })
     }
 
-    $scope.showDeleteModal = function(project_id) {
-      $ngBootbox.confirm('Are you sure delete this project?').then(function() {
-        ProjectAPI.deleteProject(project_id).success(function(response) {
-          if(response.message == 'deleted') {
+    $scope.showDeleteModal = function (project_id) {
+      $ngBootbox.confirm('Are you sure delete this project?').then(function () {
+        ProjectAPI.deleteProject(project_id).success(function (response) {
+          if (response.message == 'deleted') {
             $state.reload($state.current);
             toastr.success("Deleted sucessfully !");
           } else {
@@ -23,7 +23,7 @@ myApp.controller('Project_ListController', ['projects_data', 'ProjectAPI', '$roo
       });
     }
 
-    $scope.showShareModal = function(project) {
+    $scope.showShareModal = function (project) {
       $uibModal.open({
         templateUrl: 'views/projects/share.html',
         resolve: {
@@ -32,6 +32,18 @@ myApp.controller('Project_ListController', ['projects_data', 'ProjectAPI', '$roo
           }]
         },
         controller: "Project_ShareController"
+      })
+    }
+
+    $scope.showEditModal = function (project) {
+      $uibModal.open({
+        templateUrl: "views/projects/edit.html",
+        resolve: {
+          project_data_edit: ['ProjectAPI', function (ProjectAPI) {
+            return ProjectAPI.getProject(project.project_id);
+          }]
+        },
+        controller: "Project_EditController"
       })
     }
   }

@@ -13,10 +13,10 @@
             <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="new file" ng-click="newFile()">
               <i class="fa fa-file-code-o gray"></i>
             </a>
-            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="delete" ng-click="delete()">
+            <a id="delete-btn" class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="delete" ng-click="showDeleteModal()">
               <i class="fa fa-trash-o gray"></i>
             </a>
-            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="rename" ng-click="rename()">
+            <a id="rename-btn" class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="rename" ng-click="rename()">
               <i class="fa fa fa-edit gray"></i>
             </a>
           </div>
@@ -53,14 +53,14 @@
   </div>
 </div>
 <div class="row widget-row">
-  <div class="col-md-9 result-panel">
+  <div class="col-md-9 result-panel margin-bottom-20">
     <iframe id="result-iframe" class="result-iframe"></iframe>
   </div>
-  <div class="col-md-3">
+  <div class="col-md-3 margin-bottom-20">
     <div class="console-panel">
       <div class="m-header">
         <span class="m-header-title bold uppercase blue">Console</span>
-        <button class="m-header-action btn blue bold" type="button" ng-click="clearConsole()">Clear</button>
+        <button class="m-header-action btn blue bold btn-hover-shadow" type="button" ng-click="clearConsole()">Clear</button>
       </div>
       <div class="m-content" id="console">
       </div>

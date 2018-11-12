@@ -1,25 +1,14 @@
 myApp.controller('SharedProject_ShowController', ['shared_project_data', 'ProjectAPI', '$rootScope', '$scope', '$state', '$http', '$timeout',
   function (shared_project_data, ProjectAPI, $rootScope, $scope, $state, $http, $timeout) {
-    var user_id = $rootScope.globals.currentUserInfo.user_id;
 
     var shared_project = shared_project_data.data.shared_project;
     var data = shared_project_data.data.data;
 
     $scope.shared_project = shared_project;
-    
-    // initialize editor with CodeMirror plugin
-    var editor = CodeMirror(document.getElementById("codeeditor"), {
-      mode: "html",
-      theme: "neat",
-      tabSize: 2,
-      lineNumbers: true,
-      styleActiveLine: true,
-      readOnly: true,
-      matchBrackets: true,
-      extraKeys: { "Ctrl-Space": "autocomplete" }
-    });
 
-    // initialize treeview with jsTree plugin
+    data.state = { opened: true };
+
+    // initialize treeview with jsTree plugin  
     var tree = angular.element(document.getElementById("tree_1")).jstree({
       'core': {
         'check_callback': true,
@@ -36,15 +25,27 @@ myApp.controller('SharedProject_ShowController', ['shared_project_data', 'Projec
         'file-js': { icon: "fa fa-code red icon-lg" }
       },
       'plugins': ['types']
+    })
+
+    // initialize editor with CodeMirror plugin
+    var editor = CodeMirror(document.getElementById("codeeditor"), {
+      mode: "htmlmixed",
+      theme: "neat",
+      readOnly: true,
+      tabSize: 2,
+      lineNumbers: true,
+      styleActiveLine: true,
+      matchBrackets: true,
+      extraKeys: { "Ctrl-Space": "autocomplete" }
     });
 
     // initialize result iframe
     window.addEventListener("message", function (e) {
       let log = document.createElement("div");
-      
+
       if (e.data.type == "log-msg") {
         log.className = "logger";
-        if(typeof e.data.content === "object") {
+        if (typeof e.data.content === "object") {
           log.textContent = JSON.stringify(e.data.content);
         }
         else {
@@ -53,21 +54,21 @@ myApp.controller('SharedProject_ShowController', ['shared_project_data', 'Projec
       }
       if (e.data.type == "error-msg") {
         log.className = "logger";
-        if(typeof e.data.content === "object") {
+        if (typeof e.data.content === "object") {
           log.textContent = JSON.stringify(e.data.content);
         }
         else {
-          log.innerHTML = '<p class="margin-bot"><strong>' + e.data.position + "</strong></p>" + '<span class="red">'+ e.data.content + "</span>";
+          log.innerHTML = '<p class="margin-bot"><strong>' + e.data.position + "</strong></p>" + '<span class="red">' + e.data.content + "</span>";
         }
       }
       document.getElementById("console").appendChild(log);
     })
     angular.element(document.getElementById('result-iframe'))[0].src = '../data/' + shared_project.author_id + '/' + shared_project.project_name + '/index.html';
 
-    $scope.clearConsole = function() {
+    $scope.clearConsole = function () {
       document.getElementById("console").textContent = "";
     }
- 
+
     // fire event when select file or folder on tree view, set code of file for editor 
     var selected_file = {};
     var selected_folder = {};
