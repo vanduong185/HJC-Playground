@@ -9,5 +9,8 @@ angular.module('app').controller("HeaderController", ['Auth', '$state', '$locati
       Auth.ClearCredentials();
       $location.path("/home");
     }
+    $scope.profile = function() {
+      $location.path("/profile")
+    }
   }
 ])
