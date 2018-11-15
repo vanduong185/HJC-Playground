@@ -11,10 +11,12 @@ myApp.controller('Project_DashboardController', ['ProjectAPI', '$rootScope', '$s
             $state.reload($state.current);
             $scope.new_project.name = null;
           }
+          else if ( response.message == 'Already exist'){
+            toastr.error("This project already exists.")
+          }
           else {
             toastr.error("Something went wrong !");
           }
-
         })
       }
     }

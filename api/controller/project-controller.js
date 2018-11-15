@@ -106,7 +106,7 @@ exports.get_project = (req, res, next) => {
 exports.create_project = (req, res, next) => {
   user_id = req.params.user_id;
   new_project = req.body.new_project;
-  query_str = 'SELECT project_id FROM projects WHERE project_id = ? AND author_id = ?';
+  query_str = 'SELECT project_id FROM projects WHERE project_name = ? AND author_id = ?';
   db.query(query_str, [new_project.name, user_id], function (err, result) {
     if (err) {
       res.status(200).json({
@@ -123,6 +123,11 @@ exports.create_project = (req, res, next) => {
       values = [
         [new_project.name, user_id]
       ];
+
+      if (!fs.existsSync('./public/data/' + user_id)) {
+        fs.mkdirSync('./public/data/' + user_id);
+      }
+
       project_path = './public/data/' + user_id + '/' + new_project.name;
       file_index = project_path + '/index.html';
       folder_js = project_path + '/script';
@@ -133,6 +138,7 @@ exports.create_project = (req, res, next) => {
 
       fs.mkdir(project_path, function (error) {
         if (error) {
+          console.log(err);
           res.status(200).json({
             message: "Error"
           })
