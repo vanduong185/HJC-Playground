@@ -189,8 +189,8 @@ exports.edit_project = (req, res, next) => {
                       })
                     }
                     if (result) {
-                      query_str = "SELECT project_id FROM projects WHERE project_name = ?";
-                      db.query(query_str, [data.new_project_name], function (err, result) {
+                      query_str = "SELECT project_id FROM projects WHERE project_name = ? AND author_id = ?";
+                      db.query(query_str, [data.new_project_name, data.user_id], function (err, result) {
                         if (err) {
                           res.status(200).json({
                             message: "Error"
