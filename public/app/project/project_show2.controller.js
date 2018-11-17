@@ -1,37 +1,20 @@
-myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'ProjectAPI', '$rootScope', '$scope', '$state', '$http', '$timeout', '$ngBootbox',
+myApp.controller('Project_ShowController', ['project_data', 'ProjectAPI', '$rootScope', '$scope', '$state', '$http', '$timeout', '$ngBootbox',
   function (project_data, libraries_data, ProjectAPI, $rootScope, $scope, $state, $http, $timeout, $ngBootbox) {
     var user_id = $rootScope.globals.currentUserInfo.user_id;
 
-    //aaa
-    $scope.isOpenConsole = false;
-    $scope.interactConsole = function() {
-      if($scope.isOpenConsole) {
-        document.getElementById("result-iframe").style.height = "calc(100% - 60px)";
-        $scope.isOpenConsole = false;
-      }
-      else {
-        document.getElementById("result-iframe").style.height = "calc(100% - 200px)";
-        $scope.isOpenConsole = true;
-      }
-    }
-    //aaa
-
     // manage libraries
-    $scope.libraries = libraries_data.results.slice(0, 10);
-    $scope.keyword = "";
-    $scope.searchLibrary = function () {
-      ProjectAPI.searchLibraries($scope.keyword).then(function (res) {
-        $timeout(function () {
-          $scope.libraries = res.results.slice(0, 10);
-        }, 100);
-      })
-    }
+    // $scope.libraries = libraries_data.results.slice(0, 10);
+    // $scope.keyword = "";
+    // $scope.searchLibrary = function () {
+    //   ProjectAPI.searchLibraries($scope.keyword).then(function (res) {
+    //     $timeout(function () {
+    //       $scope.libraries = res.results.slice(0, 10);
+    //     }, 100);
+    //   })
+    // }
 
     var project = project_data.data.project;
     var data = project_data.data.data;
-
-    $scope.dicrectory_link = "#/projects/" + project.project_id + "#directory";
-    $scope.library_link = "#/projects/" + project.project_id + "#library";
 
     // initialize treeview with jsTree plugin  
     data.state = { opened: true };
@@ -54,7 +37,7 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
       'plugins': ['types']
     })
 
-    // initialize editor with CodeMirror plugin
+  //   // initialize editor with CodeMirror plugin
     var editor = CodeMirror(document.getElementById("codeeditor"), {
       mode: "htmlmixed",
       theme: "neat",
@@ -65,42 +48,37 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
       extraKeys: { "Ctrl-Space": "autocomplete" }
     });
 
-    // initialize result iframe
-    window.addEventListener("message", function (e) {
-      let log = document.createElement("div");
+  //   // initialize result iframe
+    // window.addEventListener("message", function (e) {
+    //   let log = document.createElement("div");
 
-      if (e.data.type == "log-msg") {
-        log.className = "logger";
-        if (typeof e.data.content === "object") {
-          log.textContent = JSON.stringify(e.data.content);
-        }
-        else {
-          log.textContent = e.data.content;
-        }
-      }
-      if (e.data.type == "error-msg") {
-        log.className = "logger";
-        if (typeof e.data.content === "object") {
-          log.textContent = JSON.stringify(e.data.content);
-        }
-        else {
-          log.innerHTML = '<p class="margin-bot"><strong>' + e.data.position + "</strong></p>" + '<span class="red">' + e.data.content + "</span>";
-        }
-      }
-      document.getElementById("console").appendChild(log);
-    })
+    //   if (e.data.type == "log-msg") {
+    //     log.className = "logger";
+    //     if (typeof e.data.content === "object") {
+    //       log.textContent = JSON.stringify(e.data.content);
+    //     }
+    //     else {
+    //       log.textContent = e.data.content;
+    //     }
+    //   }
+    //   if (e.data.type == "error-msg") {
+    //     log.className = "logger";
+    //     if (typeof e.data.content === "object") {
+    //       log.textContent = JSON.stringify(e.data.content);
+    //     }
+    //     else {
+    //       log.innerHTML = '<p class="margin-bot"><strong>' + e.data.position + "</strong></p>" + '<span class="red">' + e.data.content + "</span>";
+    //     }
+    //   }
+    //   document.getElementById("console").appendChild(log);
+    // })
     angular.element(document.getElementById('result-iframe'))[0].src = '../data/' + project.author_id + '/' + project.project_name + '/index.html';
 
-    $scope.clearConsole = function () {
-      document.getElementById("console").textContent = "";
-    }
+  //   $scope.clearConsole = function () {
+  //     document.getElementById("console").textContent = "";
+  //   }
 
-    $scope.refreshIframe = function() {
-      $scope.clearConsole();
-      angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
-    }
-
-    // fire event when select file or folder on tree view, set code of file for editor 
+  //   // fire event when select file or folder on tree view, set code of file for editor 
     var selected_file = {};
     var selected_folder = {};
     angular.element(document.getElementById('tree_1')).on('select_node.jstree', function (e, data) {
@@ -128,8 +106,7 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
             break;
           }
         }
-        selected_file.path = node.original.path;
-        document.getElementById("filename").textContent = node.text;
+        selected_file.path = node.original.path
         selected_file.id = node.id;
         selected_folder = null;
         editor.setValue(node.original.content);
@@ -154,7 +131,19 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
       }
     });
 
-    // fire event when coding with editor
+    $scope.isOpenConsole = true;
+    $scope.interactConsole = function() {
+      if($scope.isOpenConsole) {
+        document.getElementById("result-iframe").style.height = "calc(100% - 60px)";
+        $scope.isOpenConsole = false;
+      }
+      else {
+        document.getElementById("result-iframe").style.height = "calc(100% - 120px)";
+        $scope.isOpenConsole = true;
+      }
+    }
+
+  //   // fire event when coding with editor
     var time_out;
     editor.on("change", function () {
       if (time_out != null) {

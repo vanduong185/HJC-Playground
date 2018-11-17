@@ -48,6 +48,7 @@
 
 .CodeMirror {
   border: none !important;
+  height: 100% !important;
 }
 
 .orange {
@@ -60,6 +61,10 @@
 
 .red {
   color: #f51c1c;
+}
+
+.yellow {
+  color: #fff337;
 }
 
 .gray {
@@ -164,7 +169,7 @@
   overflow-wrap: break-word;
   word-wrap: break-word;
   border-bottom: 1px solid #eee;
-  border-left: 2px solid #1BBC9B;
+  border-left: 2px solid rgb(248, 124, 52);
   background: #fafafa;
   padding: 5px;
   margin-bottom: 10px;
@@ -202,10 +207,7 @@
 .logger {
   overflow-wrap: break-word;
   word-wrap: break-word;
-  background: #fafafa;
-  border-bottom: 1px solid #eee;
   margin-bottom: 10px;
-  padding: 10px;
 }
 
 .margin-bot {
@@ -258,3 +260,62 @@
   box-shadow: 3px 6px 8px rgb(185, 181, 181) !important;
 }
 
+.btn-create {
+  border-radius: 5% !important;
+  background-color: rgb(246, 166, 119);
+  font-weight: bold;
+  color: #fff;
+  margin-right: 10px;
+}
+
+.btn-create:hover {
+  background-color: rgb(248, 124, 52);
+  color: #fff !important;
+}
+
+.btn-create:active {
+  background-color: rgb(246, 166, 119);
+  color: #fff !important;
+}
+
+.btn-login {
+  border-radius: 5% !important;
+  background-color: rgb(144, 201, 255);
+  font-weight: bold;
+  color: #fff;
+  margin-right: 10px;
+}
+
+.btn-login:hover {
+  background-color: rgb(59, 155, 245);
+  color: #fff !important;
+}
+
+.btn-login:active {
+  color: #fff !important;
+}
+
+.menubar-center:hover {
+  background-color: transparent !important;
+}
+
+.menubar-center {
+  line-height: unset !important;
+}
+
+.align-center {
+  display: flex;
+  align-items: center;
+}
+
+.no-margin {
+  margin: 0px !important;
+}
+
+.no-padding {
+  padding: 0px !important;
+}
+
+.console-label:hover {
+  cursor: pointer;
+}

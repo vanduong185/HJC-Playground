@@ -49,12 +49,12 @@
   <div ng-include="'views/header.html'"></div>
   <!-- END HEADER -->
   <!-- BEGIN HEADER & CONTENT DIVIDER -->
-  <div class="clearfix"> </div>
+  <!-- <div class="clearfix"> </div> -->
   <!-- END HEADER & CONTENT DIVIDER -->
   <!-- BEGIN CONTAINER -->
   <div class="page-container page-content-inner page-container-bg-solid">
-    <!-- BEGIN CONTENT -->
-    <div ui-view class="container-fluid container-lf-space">
+    <!-- BEGIN CONTENT --> 
+    <div ui-view class="container-fluid container-lf-space" style="padding: 0px;">
       <!-- BEGIN PAGE BASE CONTENT -->
       <!-- END PAGE BASE CONTENT -->
     </div>
@@ -62,7 +62,7 @@
   </div>
   <!-- END CONTAINER -->
   <!-- BEGIN FOOTER -->
-  <div class="page-footer">
+  <div class="page-footer" style="height: 20px; background-color: #eee;">
 
   </div>
   <!-- END FOOTER -->

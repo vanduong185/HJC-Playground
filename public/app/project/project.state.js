@@ -31,7 +31,7 @@ myApp.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
     })
     .state('projects.show_shared_project', {
       url: "/shared_project/:project_id",
-      templateUrl: "views/projects/show_shared_project.html",
+      templateUrl: "views/projects/show_shared_project2.html",
       resolve: {
         shared_project_data: ['ProjectAPI', '$stateParams', function (ProjectAPI, $stateParams) {
           return ProjectAPI.getSharedProject($stateParams.project_id);
@@ -41,7 +41,7 @@ myApp.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
     })
     .state('projects.show', {
       url: "/:project_id",
-      templateUrl: "views/projects/show.html",
+      templateUrl: "views/projects/show2.html",
       resolve: {
         project_data: ['ProjectAPI', '$stateParams', function (ProjectAPI, $stateParams) {
           return ProjectAPI.getProject($stateParams.project_id);

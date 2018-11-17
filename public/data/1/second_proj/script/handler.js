@@ -7,4 +7,5 @@ var a = {
 }
 
 var b = [{a: "a", b: "as"}, {c: "a", d: "a"}];
-console.log(b);  
+console.log(b); 
+console.log(1/0); 

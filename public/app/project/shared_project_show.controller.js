@@ -6,7 +6,23 @@ myApp.controller('SharedProject_ShowController', ['shared_project_data', 'Projec
 
     $scope.shared_project = shared_project;
 
+    $scope.dicrectory_link = "#/projects/shared_project/" + shared_project.project_id + "#directory";
+
     data.state = { opened: true };
+
+    //aaa
+    $scope.isOpenConsole = false;
+    $scope.interactConsole = function() {
+      if($scope.isOpenConsole) {
+        document.getElementById("result-iframe").style.height = "calc(100% - 60px)";
+        $scope.isOpenConsole = false;
+      }
+      else {
+        document.getElementById("result-iframe").style.height = "calc(100% - 200px)";
+        $scope.isOpenConsole = true;
+      }
+    }
+    //aaa
 
     // initialize treeview with jsTree plugin  
     var tree = angular.element(document.getElementById("tree_1")).jstree({
@@ -69,6 +85,11 @@ myApp.controller('SharedProject_ShowController', ['shared_project_data', 'Projec
       document.getElementById("console").textContent = "";
     }
 
+    $scope.refreshIframe = function() {
+      $scope.clearConsole();
+      angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
+    }
+
     // fire event when select file or folder on tree view, set code of file for editor 
     var selected_file = {};
     var selected_folder = {};
@@ -93,7 +114,8 @@ myApp.controller('SharedProject_ShowController', ['shared_project_data', 'Projec
             break;
           }
         }
-        selected_file.path = node.original.path
+        selected_file.path = node.original.path;
+        document.getElementById("filename").textContent = node.text;
         selected_file.id = node.id;
         selected_folder = null;
         editor.setValue(node.original.content);

@@ -7,7 +7,7 @@ myApp.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
     })
     .state("playground.guest", {
       url: "/guest",
-      templateUrl: "views/playground/guest.html",
+      templateUrl: "views/playground/guest2.html",
       resolve: {
         guest_project_data: ['GuestProject', function (GuestProject) {
           return GuestProject.get_guest_project();
