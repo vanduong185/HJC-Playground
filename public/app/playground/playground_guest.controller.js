@@ -1,6 +1,20 @@
 myApp.controller('Playground_GuestController', ['guest_project_data', 'libraries_data', 'GuestProject', 'Auth', "$uibModal", '$rootScope', '$scope', '$state', '$http', '$timeout', '$location', '$ngBootbox',
   function (guest_project_data, libraries_data, GuestProject, Auth, $uibModal, $rootScope, $scope, $state, $http, $timeout, $location, $ngBootbox) {
 
+    //aaa
+    $scope.isOpenConsole = false;
+    $scope.interactConsole = function() {
+      if($scope.isOpenConsole) {
+        document.getElementById("result-iframe").style.height = "calc(100% - 60px)";
+        $scope.isOpenConsole = false;
+      }
+      else {
+        document.getElementById("result-iframe").style.height = "calc(100% - 200px)";
+        $scope.isOpenConsole = true;
+      }
+    }
+    //aaa
+
     //manage libraries
     $scope.libraries = libraries_data.results.slice(0, 10);
     $scope.keyword = "";
@@ -14,10 +28,13 @@ myApp.controller('Playground_GuestController', ['guest_project_data', 'libraries
 
     var guest_project = guest_project_data.data.guest_project;
     var data = guest_project_data.data.data;
-    data.text = "guest";
-    data.state = { opened: true };
 
-    // initialize treeview with jsTree plugin  
+    $scope.dicrectory_link = "#/playground/guest#directory";
+    $scope.library_link = "#/playground/guest#library";
+
+    // initialize treeview with jsTree plugin 
+    data.text = "guest";
+    data.state = { opened: true }; 
     var tree = angular.element(document.getElementById("tree_1")).jstree({
       'core': {
         'check_callback': true,
@@ -77,6 +94,11 @@ myApp.controller('Playground_GuestController', ['guest_project_data', 'libraries
       document.getElementById("console").textContent = "";
     }
 
+    $scope.refreshIframe = function() {
+      $scope.clearConsole();
+      angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
+    }
+
     // fire event when select file or folder on tree view, set code of file for editor 
     var selected_file = {};
     var selected_folder = {};
@@ -105,7 +127,8 @@ myApp.controller('Playground_GuestController', ['guest_project_data', 'libraries
             break;
           }
         }
-        selected_file.path = node.original.path
+        selected_file.path = node.original.path;
+        document.getElementById("filename").textContent = node.text;
         selected_file.id = node.id;
         selected_folder = null;
         editor.setValue(node.original.content);
