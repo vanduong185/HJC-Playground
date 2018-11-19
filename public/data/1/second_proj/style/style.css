@@ -1,5 +1,10 @@
-#title {
+html, body {
+	height: 100%;
+  background-color: cyan;
+}
+
+.title {
+	text-align: center;
   color: red;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  font-size: 24px; 
+  font-size: 40px;
 }

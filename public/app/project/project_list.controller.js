@@ -46,5 +46,11 @@ myApp.controller('Project_ListController', ['projects_data', 'ProjectAPI', '$roo
         controller: "Project_EditController"
       })
     }
+
+    $scope.searchProject = function() {
+      ProjectAPI.getProjects($scope.keyword).then(function (response) {
+        $scope.projects = response.data.projects;
+      })
+    }
   }
 ])

@@ -521,6 +521,10 @@ myApp.controller('Playground_GuestController', ['guest_project_data', 'libraries
           controller: function ($scope, $rootScope, $http, $location, $uibModalInstance) {
             $scope.project_name = null;
 
+            $scope.close = function() {
+              $uibModalInstance.close();
+            }
+
             $scope.save = function () {
               if ($scope.project_name != null) {
                 project = {

@@ -1,0 +1,30 @@
+<div style="background-image: url('../../lib/images/background.jpg');
+  background-size: cover; 
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;">
+  <img alt="" ng-src="{{globals.currentUserInfo.avatar || 'lib/images/avatar.png'}}" style="width: 150px; border-radius: 50% !important">
+  <div>
+    <span style="font-size: 24px; color: rgb(158, 158, 158); font-weight: bold">{{globals.currentUserInfo.nickname}}</span>
+  </div>
+  <div>
+    <span style="font-size: 18px; color: rgb(158, 158, 158); font-weight: normal">{{globals.currentUserInfo.email}}</span>
+  </div>
+</div>
+<div style="padding: 15px 30px; background-color: #fff">
+  <div class="tabbable-line">
+    <ul class="nav nav-tabs bold">
+      <li ng-class="{'active': state.current.name == 'projects.dashboard.list'}">
+        <a ui-sref="projects.dashboard.list"> My projects </a>
+      </li>
+      <li ng-class="{'active': state.current.name == 'projects.dashboard.shared_project'}">
+        <a ui-sref="projects.dashboard.shared_project"> Shared with me </a>
+      </li>
+    </ul>
+    <div class="tab-content">
+      <div ui-view></div>
+    </div>
+  </div>
+</div>

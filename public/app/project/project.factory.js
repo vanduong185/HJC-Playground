@@ -6,17 +6,38 @@ myApp.factory('ProjectAPI', ['$http', '$rootScope', function ($http, $rootScope)
     searchLibraries: function (query) {
       return $.get("https://api.cdnjs.com/libraries?search=" + query)
     },
-    getProjects: function() {
-      return $http({
-        method: "GET",
-        url: '/projects/' + $rootScope.globals.currentUserInfo.user_id,
-        headers: { 'Content-Type': 'application/json' }
-      })
+    getProjects: function(keyword) {
+      if (keyword) {
+        options = {
+          project_id: null,
+          keyword: keyword
+        }
+        return $http({
+          method: "GET",
+          url: '/projects/' + $rootScope.globals.currentUserInfo.user_id + '/' + JSON.stringify(options),
+          headers: { 'Content-Type': 'application/json' }
+        })
+      }
+      else {
+        options = {
+          project_id: null,
+          keyword: null
+        }
+        return $http({
+          method: "GET",
+          url: '/projects/' + $rootScope.globals.currentUserInfo.user_id + '/' + JSON.stringify(options),
+          headers: { 'Content-Type': 'application/json' }
+        })
+      }
     },
     getProject: function(project_id) {
+      options = {
+        project_id: project_id,
+        keyword: null
+      }
       return $http({
         method: "GET",
-        url: '/projects/' + $rootScope.globals.currentUserInfo.user_id + '/' + project_id,
+        url: '/projects/' + $rootScope.globals.currentUserInfo.user_id + '/' + JSON.stringify(options),
         headers: { 'Content-Type': 'application/json' }
       })
     },
@@ -34,17 +55,38 @@ myApp.factory('ProjectAPI', ['$http', '$rootScope', function ($http, $rootScope)
       return $http.post('/projects/' + $rootScope.globals.currentUserInfo.user_id + '/' + project_id + "/share",
         {viewers: viewers});
     },
-    getSharedProjects: function() {
-      return $http({
-        method: "GET",
-        url: '/shared_projects/' + $rootScope.globals.currentUserInfo.user_id,
-        headers: { 'Content-Type': 'application/json' }
-      })
+    getSharedProjects: function(keyword) {
+      if (keyword) {
+        options = {
+          project_id: null,
+          keyword: keyword
+        }
+        return $http({
+          method: "GET",
+          url: '/shared_projects/' + $rootScope.globals.currentUserInfo.user_id + '/' + JSON.stringify(options),
+          headers: { 'Content-Type': 'application/json' }
+        })
+      }
+      else {
+        options = {
+          project_id: null,
+          keyword: null
+        }
+        return $http({
+          method: "GET",
+          url: '/shared_projects/' + $rootScope.globals.currentUserInfo.user_id + '/' + JSON.stringify(options),
+          headers: { 'Content-Type': 'application/json' }
+        })
+      }
     },
     getSharedProject: function(project_id) {
+      options = {
+        project_id: project_id,
+        keyword: null
+      }
       return $http({
         method: "GET",
-        url: '/shared_projects/' + $rootScope.globals.currentUserInfo.user_id + "/" + project_id,
+        url: '/shared_projects/' + $rootScope.globals.currentUserInfo.user_id + '/' + JSON.stringify(options),
         headers: { 'Content-Type': 'application/json' }
       })
     }

@@ -6,7 +6,7 @@ myApp.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
     })
     .state('projects.dashboard', {
       url: "/dashboard",
-      templateUrl: "views/projects/dashboard.html",
+      templateUrl: "views/projects/dashboard2.html",
       controller: 'Project_DashboardController'
     })
     .state('projects.dashboard.list', {

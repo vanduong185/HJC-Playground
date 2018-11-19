@@ -1,18 +1,33 @@
-<div class="row">
-  <div ng-repeat="shared_project in shared_projects" class="col-xs-6 col-sm-4 col-md-3">
-    <div class="item">
-      <div class="item-view">
-        <div>
-          <i class="fa fa-folder blue icon-big"></i>
-        </div>
-        <div>
-          <i class="fa fa-user gray author">
-            <span>{{shared_project.author_email}}</span>
-          </i>
-        </div>
+<div style="position: relative;">
+  <div style="position: absolute; top: -78px; left: 70%; display: flex; flex-direction: row; float: right; width: 30%; padding: 8px 10px">
+    <input type="text" style="border: 1px solid #91c9fd;
+        height: 30px;
+        width: calc(100% - 25px);
+        padding: 5px 10px;
+        font-weight: normal"
+      ng-model="keyword" ng-keyup="$event.which == 13 ? searchSharedProject() : null" placeholder="Search shared project ...">
+    <button class="btn" type="button" style="background-color: #91c9fd;
+        height: 30px;
+        padding: 0px 5px;
+        color: #fff;"
+      ng-click="searchSharedProject()">
+      <i class="fa fa-search"></i>
+    </button>
+  </div>
+</div>
+<div class="row no-margin">
+  <div ng-repeat="shared_project in shared_projects" class="col-xs-12 col-sm-6 col-md-4" style="margin-bottom: 30px">
+    <div style="height: 250px; box-shadow: 0 3px 8px rgb(167, 167, 167);; border-radius: 6px !important; position: relative;">
+      <div class="iframe-demo">
+        <iframe class="my-iframe" src='{{"../data/" + shared_project.author_id + "/" + shared_project.project_name + "/index.html"}}'
+          frameborder="0" marginwidth="0" marginheight="0" style="height: 100%; width: 100%; border-radius: 6px 6px 0px 0px;">
+        </iframe>
       </div>
-      <div class="item-title">
-        <a ui-sref="projects.show_shared_project({project_id: shared_project.project_id})" title="View project">
+      <div class="author">
+          {{shared_project.author_email}}
+      </div>
+      <div style="height: 20%; background-color: #eee; border-radius: 0px 0px 6px 6px !important; border-top: 1px solid #ddd; padding: 10px; text-align: center">
+        <a ui-sref="projects.show_shared_project({project_id: shared_project.project_id})" title="Open project" style="font-weight: 800">
           {{shared_project.project_name}}
         </a>
       </div>

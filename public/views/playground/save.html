@@ -3,10 +3,8 @@
   <h4 class="modal-title">Save project</h4>
 </div>
 <div class="modal-body">
-  <div class="input-group">
-    <input type="text" class="form-control" ng-model="project_name" ng-keyup="$event.which == 13 ? save() : null"
-      placeholder="Enter project's name ..." autofocus>
-  </div>
+  <input type="text" class="form-control" ng-model="project_name" ng-keyup="$event.which == 13 ? save() : null"
+    placeholder="Enter project's name ..." autofocus>
 </div>
 <div class="modal-footer">
   <button type="button" data-dismiss="modal" class="btn btn-outline dark" ng-click="close()">Close</button>

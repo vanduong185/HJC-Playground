@@ -4,9 +4,10 @@ var fs = require("fs");
 var fsex = require("fs-extra");
 
 exports.get_project = (req, res, next) => {
-  if (req.params.project_id) {
+  var options = JSON.parse(req.params.options);
+  if (options.project_id) {
     user_id = req.params.user_id;
-    project_id = req.params.project_id;
+    project_id = options.project_id;
     query_str = "SELECT * FROM shared_projects WHERE project_id = ?";
     db.query(query_str, [project_id], function (err, result) {
       if (err) {
@@ -79,27 +80,50 @@ exports.get_project = (req, res, next) => {
     })
   }
   else {
-    user_id = req.params.user_id;
-    query_str = 'SELECT * FROM projects WHERE author_id = ?';
-    db.query(query_str, [user_id], function (err, result) {
+    if (options.keyword == null) {
+      user_id = req.params.user_id;
+      query_str = 'SELECT * FROM projects WHERE author_id = ?';
+      db.query(query_str, [user_id], function (err, result) {
+        if (err) {
+          res.status(200).json({
+            message: "Error"
+          })
+        }
 
-      if (err) {
-        res.status(200).json({
-          message: "Error"
-        })
-      }
+        if (result.length > 0) {
+          res.status(200).json({
+            projects: result
+          })
+        }
+        else {
+          res.status(200).json({
+            message: "No project"
+          })
+        }
+      })
+    }
+    else {
+      user_id = req.params.user_id;
+      query_str = 'SELECT * FROM projects WHERE author_id = ? AND project_name LIKE ?';
+      db.query(query_str, [user_id, '%' + options.keyword + '%'], function(err, result) {
+        if (err) {
+          res.status(200).json({
+            message: "Error"
+          })
+        }
 
-      if (result.length > 0) {
-        res.status(200).json({
-          projects: result
-        })
-      }
-      else {
-        res.status(200).json({
-          message: "No project"
-        })
-      }
-    })
+        if (result.length > 0) {
+          res.status(200).json({
+            projects: result
+          })
+        }
+        else {
+          res.status(200).json({
+            message: "No project"
+          })
+        }
+      })
+    }
   }
 }
 
