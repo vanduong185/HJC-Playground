@@ -45,13 +45,14 @@
           <div class="tab-pane fade" id="library" name="library" style="height: 100%; padding: 10px">
               <div style="height: 25px ;display: flex; flex-direction: row; justify-content: center; margin-bottom: 30px">
                 <input type="text" 
-                  style="flex: 9; border: 1px solid #f3a677;
+                  style="border: 1px solid #f3a677;
                     height: 25px;
+                    width: calc(100% - 25px);
                     padding: 5px 10px;" 
                   ng-model="keyword" ng-keyup="$event.which == 13 ? searchLibrary() : null"
                   placeholder="Search library...">
                 <button class="btn" type="button" 
-                  style="flex: 1; background-color: #f3a677;
+                  style="background-color: #f3a677;
                     height: 25px;
                     padding: 0px 5px;
                     color: #fff;" 

@@ -141,14 +141,39 @@
 }
 
 .author {
-  padding: 10px;
-  font-size: 14px;
-  margin-top: 20px;
+  position: absolute;
+  top: 175px;
+  left: 0px;
+  height: 25px;
+  width: 100%;
+  text-align: center;
+  background-color: #eee;
+  opacity: 0.7;
+}
+
+.iframe-demo {
+  height: 80%;
+  width: 100%;
 }
 
 .item-action {
-  float: right;
-  margin-left: -15px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: #eee;
+  opacity: 0;
+  height: 80%;
+  width: 100%;
+  border-radius: 6px 6px 0px 0px;
+  transition:  opacity 0.5s ease;
+}
+
+.my-iframe {
+  opacity: 1;
+}
+
+.item-action:hover {
+  opacity: 0.7 !important;
 }
 
 .item-title {
@@ -273,8 +298,7 @@
   color: #fff !important;
 }
 
-.btn-create:active {
-  background-color: rgb(246, 166, 119);
+.btn-create:focus {
   color: #fff !important;
 }
 
@@ -291,7 +315,7 @@
   color: #fff !important;
 }
 
-.btn-login:active {
+.btn-login:focus {
   color: #fff !important;
 }
 

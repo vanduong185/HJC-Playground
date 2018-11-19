@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Máy chủ: localhost
--- Thời gian đã tạo: Th10 12, 2018 lúc 10:16 AM
+-- Thời gian đã tạo: Th10 20, 2018 lúc 01:58 AM
 -- Phiên bản máy phục vụ: 5.7.24-0ubuntu0.16.04.1-log
 -- Phiên bản PHP: 7.0.32-0ubuntu0.16.04.1
 
@@ -41,7 +41,8 @@ INSERT INTO `projects` (`project_id`, `project_name`, `author_id`) VALUES
 (2, 'second_proj', 1),
 (20, 'haha', 2),
 (21, 'haha', 1),
-(22, 'tuan anh', 1);
+(22, 'tuan anh', 1),
+(24, 'love', 2);
 
 -- --------------------------------------------------------
 
@@ -61,7 +62,9 @@ CREATE TABLE `shared_projects` (
 
 INSERT INTO `shared_projects` (`shared_project_id`, `project_id`, `viewer_id`) VALUES
 (5, 20, 1),
-(14, 1, 3);
+(14, 1, 3),
+(15, 24, 1),
+(16, 21, 2);
 
 -- --------------------------------------------------------
 
@@ -126,12 +129,12 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT cho bảng `projects`
 --
 ALTER TABLE `projects`
-  MODIFY `project_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `project_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 --
 -- AUTO_INCREMENT cho bảng `shared_projects`
 --
 ALTER TABLE `shared_projects`
-  MODIFY `shared_project_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `shared_project_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 --
 -- AUTO_INCREMENT cho bảng `users`
 --
