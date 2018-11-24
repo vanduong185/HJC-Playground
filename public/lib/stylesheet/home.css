@@ -41,7 +41,7 @@ img {vertical-align: middle;}
   transition: background-color 0.6s ease;
 }
 
-.active {
+.hjc_home .active {
   background-color: #717171;
 }
 

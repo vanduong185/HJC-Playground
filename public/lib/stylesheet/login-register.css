@@ -73,7 +73,12 @@
 	-o-animation-name: shake;
 	animation-name: shake;
 }
-
+.login .form .form-control{
+    border-radius: 3px !important;
+    background-color: rgba(0, 0, 0, 0.09);
+    box-shadow: 0 1px 0px 0px rgba(207, 169, 169, 0.09) inset;
+    color: #000000;
+}
 .modal-dialog{
     width: 350px;
 }
@@ -184,7 +189,7 @@
     text-transform: uppercase;
     width: 100%;
 }
-.login .btn-login:hover, .registerBox .btn-register:hover{
+.login .btn-login:hover, .login .btn-register:hover{
     background-color: #00A4E4;
     color: #FFFFFF;
 }
