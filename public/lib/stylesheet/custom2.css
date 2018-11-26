@@ -285,6 +285,27 @@
   box-shadow: 3px 6px 8px rgb(185, 181, 181) !important;
 }
 
+.btn-start {
+  border-radius: 5% !important;
+  background-color: rgb(248, 124, 52);
+  font-weight: bold;
+  font-size: 32px;
+  color: #fff;
+  margin-right: 10px;
+  height: 80px;
+  width: 160px;
+}
+
+.btn-start:hover {
+  background-color: rgb(248, 124, 52);
+  color: #fff !important;
+}
+
+.btn-start:active {
+  background-color: rgb(246, 166, 119);
+  color: #fff !important;
+}
+
 .btn-create {
   border-radius: 5% !important;
   background-color: rgb(246, 166, 119);

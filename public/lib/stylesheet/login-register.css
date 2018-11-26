@@ -82,7 +82,7 @@
 .modal-dialog{
     width: 350px;
 }
-.modal-footer{
+.login .modal-footer{
     border-top: 0;
     margin-top: 0px;
     padding: 10px 20px 20px;
@@ -91,7 +91,6 @@
     border: 0 none;
     padding: 15px 15px 15px;
     background-color: #ffffff;
-    border-radius: 6px !important;
     /* border: 1px solid #c2cad8; */
 /*     padding: 11px 15px; */
 }
@@ -102,7 +101,7 @@
     outline: none !important;
 }
 .login .modal-body{
-     background-color: #eeeeee; 
+    background-color: #ffffff; 
 }
 .modal-content{
     background-color: #ffffff !important;
