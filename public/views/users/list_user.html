@@ -1,0 +1,54 @@
+<div style="padding: 0px 30px; color: black">
+  <div style="min-height: 35px">
+    <button class="btn btn-create pull-left" style="margin-bottom: 15px" ng-click="addUser()">Add new account</button>
+    <div style="float: right; display: flex; flex-direction: row; width: 30%; margin-bottom: 15px">
+      <input type="text" style="border: 1px solid #91c9fd;
+            height: 30px;
+            width: calc(100% - 25px);
+            padding: 5px 10px;
+            border-radius: 5px 0px 0px 5px !important;
+            font-weight: normal;
+            color: #93a2a9"
+        ng-model="keyword" ng-keyup="$event.which == 13 ? searchUser() : null" placeholder="Search user ...">
+      <button class="btn" type="button" style="background-color: #91c9fd;
+            height: 30px;
+            padding: 0px 5px;
+            color: #fff;
+            border-radius: 0px 5px 5px 0px !important;"
+        ng-click="searchUser()">
+        <i class="fa fa-search"></i>
+      </button>
+    </div>
+  </div>
+  <div>
+    <table class="table table-hover table-light">
+      <thead>
+        <th>ID</th>
+        <th>Avatar</th>
+        <th>Email</th>
+        <th>Nickname</th>
+        <th>Age</th>
+        <th>Job title</th>
+        <th>Block</th>
+      </thead>
+      <tbody>
+        <tr ng-repeat="user in users.list">
+          <td>{{user.user_id}}</td>
+          <td><img ng-src="{{user.avatar || 'lib/images/avatar.png'}}" style="width: 30px; border-radius: 50% !important"></td>
+          <td>{{user.email}}</td>
+          <td>{{user.nickname}}</td>
+          <td>{{user.age}}</td>
+          <td>{{user.jobtitle}}</td>
+          <td><i class="fa fa-trash delete-user" ng-click="showDeleteModal(user.user_id)"></i></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="display: flex; justify-content: center">
+    <ul uib-pagination boundary-links="true" total-items="users.total_items" ng-change="pageChange()" ng-model="options.paginate.page"
+      class="pagination-sm" max-size="3" items-per-page="users.per_page" previous-text="&lsaquo;" next-text="&rsaquo;"
+      first-text="&laquo;" last-text="&raquo;">
+    </ul>
+  </div>
+</div>

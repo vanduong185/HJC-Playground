@@ -18,6 +18,7 @@ module_authen.factory("Auth",
           $timeout(function () {
             if (res.data.message === "success") {      
               $rootScope.globals.currentUserInfo = res.data.data;
+              $rootScope.globals.token = res.data.token;
               response.success = true;
               callback(response);
             }
@@ -33,16 +34,15 @@ module_authen.factory("Auth",
       };
 
       service.SetCredentials = function (username, password) {
-        var authdata = Base64.encode(username + ":" + password);
-        $rootScope.globals.currentUser = { username: username, authdata: authdata }
-        $http.defaults.headers.common["Authorization"] = "Basic " + authdata;
+        $rootScope.globals.currentUser = { username: username }
+        $http.defaults.headers.common["Authorization"] = $rootScope.globals.token;
         $cookieStore.put("globals", $rootScope.globals);
       };
 
       service.ClearCredentials = function () {
         $rootScope.globals = {};
         $cookieStore.remove("globals");
-        $http.defaults.headers.common.Authorization = "Basic ";
+        $http.defaults.headers.common["Authorization"] = null ;
       };
 
       service.IsAuthenticated = function () {

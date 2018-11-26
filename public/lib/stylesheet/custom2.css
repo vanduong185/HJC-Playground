@@ -307,7 +307,7 @@
 }
 
 .btn-create {
-  border-radius: 5% !important;
+  border-radius: 5px !important;
   background-color: rgb(246, 166, 119);
   font-weight: bold;
   color: #fff;
@@ -324,7 +324,7 @@
 }
 
 .btn-login {
-  border-radius: 5% !important;
+  border-radius: 5px !important;
   background-color: rgb(144, 201, 255);
   font-weight: bold;
   color: #fff;
@@ -337,6 +337,23 @@
 }
 
 .btn-login:focus {
+  color: #fff !important;
+}
+
+.btn-admin {
+  border-radius: 5px !important;
+  background-color: #bdbdbd;
+  font-weight: bold;
+  color: #fff;
+  margin-right: 10px;
+}
+
+.btn-admin:hover {
+  background-color: #b4b4b2;
+  color: #fff !important;
+}
+
+.btn-admin:focus {
   color: #fff !important;
 }
 
@@ -362,5 +379,10 @@
 }
 
 .console-label:hover {
+  cursor: pointer;
+}
+
+.delete-user:hover {
+  color: red !important;
   cursor: pointer;
 }
