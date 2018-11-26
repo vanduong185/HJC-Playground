@@ -1,9 +1,8 @@
 var db = require("../../hjc_db");
 var crypto = require("../../crypto");
 var jwt = require("jsonwebtoken");
-var express = require('express'),
-    fs = require('fs')
-    url = require('url');
+var fs = require('fs');
+var config = require('../../config');
 
 exports.create_user = (req, res, next) => {
   var infor = req.body.user;
@@ -59,12 +58,11 @@ exports.login = (req, res, next) => {
       crypto.comparePassword(data.password, user.password, function (err, isPassMatch) {
         if (isPassMatch) {
           const token = jwt.sign({
-            email: user.email,
-            userId: user.user_id
+            user: user
           },
-            process.env.JWT_KEY,
+            config.secret,
             {
-              expiresIn: "1h"
+              expiresIn: "24h"
             })
           res.json({
             message: "success",
@@ -101,16 +99,14 @@ exports.updateInfo = (req, res, next) => {
           "id": infor.id
         }
       ];
-      // console.log(values[0]);
+
       db.query(query_str, [values[0].nickname, values[0].age, values[0].jobtitle, values[0].id], function (err, result) {
         if (err) {
-          console.log(err);
           res.status(200).json({
             message: "Error"
           })
         }
         if (result) {
-          console.log(result);
           res.status(200).json({
             message: "Success"
           })
@@ -135,16 +131,14 @@ exports.updateInfo = (req, res, next) => {
                   + hassPass + '" WHERE user_id = "' + infor.id + '"';
                 db.query(query_str2, function (err, result) {
                   if (err) {
-                    console.log(err);
                     res.status(200).json({
                       message: "Error",
                     })
                   }
                   if (result) {
-                    // console.log(result);
                     res.status(200).json({
                       message: "Success",
-                      data : hassPass
+                      data: hassPass
                     })
                   }
                 });
@@ -167,39 +161,153 @@ exports.updateInfo = (req, res, next) => {
     }
     default: {
       var images = req.files;
-    if(images){
-      images.forEach(function(file) {
-        var filename = 'avatar' + '-' + file.originalname ;
-        fs.rename(file.path, 'public/lib/images/avatar/1/' + filename,function(err){
-          if(err){
-            console.log(err);
-          }
-          else{
-            var avatar = 'lib/images/avatar/1/' + filename;
-            let query_str2 = 'Update users set avatar = "'
-                  + avatar + '" WHERE user_id = "' + infor.id + '"';
-                db.query(query_str2, function (err, result) {
-                  if (err) {
-                    console.log(err);
-                    res.status(200).json({
-                      message: "Error"
-                    })
-                  }
-                  if (result) {
-                    // console.log(result);
-                    res.status(200).json({
-                      message: "Success",
-                      data : avatar
-                    })
-                  }
-                });
-          }
-        })
-      });
-    }
-    break;
+      if (images) {
+        images.forEach(function (file) {
+          var filename = 'avatar' + '-' + file.originalname;
+          fs.rename(file.path, 'public/lib/images/avatar/1/' + filename, function (err) {
+            if (err) {
+              console.log(err);
+            }
+            else {
+              var avatar = 'lib/images/avatar/1/' + filename;
+              let query_str2 = 'Update users set avatar = "'
+                + avatar + '" WHERE user_id = "' + infor.id + '"';
+              db.query(query_str2, function (err, result) {
+                if (err) {
+                  res.status(200).json({
+                    message: "Error"
+                  })
+                }
+                if (result) {
+                  res.status(200).json({
+                    message: "Success",
+                    data: avatar
+                  })
+                }
+              });
+            }
+          })
+        });
+      }
+      break;
     }
   }
-  // console.log(infor);
+}
 
+exports.get_user = (req, res, next) => {
+  token = req.headers.authorization;
+
+  jwt.verify(token, config.secret, function (err, decoded) {
+    if (err) {
+      return res.status(200).json({
+        auth: false,
+        message: 'Failed to authenticate token.'
+      });
+    }
+
+    user = decoded.user;
+    if (user.isAdmin == 1) {
+      options = JSON.parse(req.params.options);
+
+      if (options.keyword == null) {
+        query_str = "SELECT * FROM users WHERE isAdmin = 0 LIMIT 10 OFFSET ?";
+        db.query(query_str, [(options.paginate.page - 1) * 10], function (err, result) {
+          if (err) {
+            res.status(200).json({
+              message: "Error"
+            })
+          }
+          users = result;
+          query_str = "SELECT COUNT(*) as amount FROM users WHERE isAdmin = 0";
+          db.query(query_str, function (err, result) {
+            res.status(200).json({
+              users: {
+                list: users,
+                total_items: result[0].amount,
+                per_page: 10
+              }
+            })
+          })
+        })
+      }
+      else {
+        query_str = "SELECT * FROM users WHERE isAdmin = 0 AND ( email LIKE ? OR nickname LIKE ? ) LIMIT 10 OFFSET ?";
+        db.query(query_str, ["%" + options.keyword + "%", "%" + options.keyword + "%", (options.paginate.page - 1) * 10], function (err, result) {
+          if (err) {
+            res.status(200).json({
+              message: "Error"
+            })
+          }
+          users = result;
+          query_str = "SELECT COUNT(*) as amount FROM users WHERE isAdmin = 0 AND ( email LIKE ? OR nickname LIKE ? )";
+          db.query(query_str, ["%" + options.keyword + "%", "%" + options.keyword + "%"], function (err, result) {
+            res.status(200).json({
+              users: {
+                list: users,
+                total_items: result[0].amount,
+                per_page: 10
+              }
+            })
+          })
+        })
+      }
+    }
+    else {
+      res.status(200).json({
+        message: "no permission"
+      })
+    }
+  })
+}
+
+exports.delete_user = (req, res, next) => {
+  token = req.headers.authorization;
+
+  jwt.verify(token, config.secret, function (err, decoded) {
+    if (err) {
+      return res.status(200).json({
+        auth: false,
+        message: 'Failed to authenticate token.'
+      });
+    }
+
+    user = decoded.user;
+
+    if (user.isAdmin == 1) {
+      delete_user_id = req.params.user_id;
+      query_str = "SELECT * FROM users WHERE user_id = ?";
+      db.query(query_str, [delete_user_id], function (err, result) {
+        if (err) {
+          res.status(200).json({
+            message: "Error"
+          })
+        }
+
+        if (result.length > 0) {
+          query_str = "DELETE FROM users WHERE user_id = ?";
+          db.query(query_str, [delete_user_id], function (err, result) {
+            if (err) {
+              res.status(200).json({
+                message: "Error"
+              })
+            }
+
+            res.status(200).json({
+              message: "deleted"
+            })
+          })
+        }
+        else {
+          res.status(200).json({
+            message: "Error"
+          })
+        }
+      })
+    }
+    else {
+      res.status(200).json({
+        message: "no permission"
+      })
+    }
+  })
 }

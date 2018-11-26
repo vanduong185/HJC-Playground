@@ -1,0 +1,26 @@
+<div style="background-image: url('../../lib/images/background.jpg');
+  background-size: cover; 
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;">
+  <div>
+    <span style="font-size: 40px; color: rgb(158, 158, 158); font-weight: bold">ADMIN AREA</span>
+  </div>
+</div>
+<div style="padding: 15px 30px; background-color: #fff">
+  <div class="tabbable-line">
+    <ul class="nav nav-tabs bold">
+      <li ng-class="{'active': state.current.name == 'users.list_user'}">
+        <a ui-sref="users.list_user"> User management </a>
+      </li>
+      <li>
+        <a> Admin management </a>
+      </li>
+    </ul>
+    <div class="tab-content">
+      <div ui-view></div>
+    </div>
+  </div>
+</div>

@@ -6,13 +6,6 @@ myApp.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
     controller: "HomeController"
   };
 
-  var usersState = {
-    name: 'users',
-    url: '/users',
-    templateUrl: 'views/users.html',
-    controller: "UserController"
-  };
-
   var signUpState = {
     name: 'signUp',
     url: '/signUp',
@@ -28,7 +21,6 @@ myApp.config(function($stateProvider, $urlRouterProvider, $locationProvider) {
   
   $stateProvider.state(profileState);
   $stateProvider.state(signUpState);
-  $stateProvider.state(usersState);
   $stateProvider.state(homeState);
 
   $urlRouterProvider.otherwise('/home');

@@ -45,7 +45,7 @@ myApp.factory('ProjectAPI', ['$http', '$rootScope', function ($http, $rootScope)
       return $http.post('/projects/' + $rootScope.globals.currentUserInfo.user_id,
         {new_project: new_project});
     },
-    deleteProject: function(project_id, update_project) {
+    deleteProject: function(project_id) {
       return $http.delete('/projects/' + $rootScope.globals.currentUserInfo.user_id + '/' + project_id);
     },
     updateProject: function(project_id, update_project) {
