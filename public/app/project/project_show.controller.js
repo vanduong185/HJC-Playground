@@ -2,6 +2,10 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
   function (project_data, libraries_data, ProjectAPI, $rootScope, $scope, $state, $http, $timeout, $ngBootbox) {
     var user_id = $rootScope.globals.currentUserInfo.user_id;
 
+    if (project_data.data.message == "Error") {
+      alert("Can not found this project.");
+      return;
+    }
     //aaa
     $scope.isOpenConsole = false;
     $scope.interactConsole = function() {

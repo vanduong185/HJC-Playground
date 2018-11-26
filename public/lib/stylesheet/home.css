@@ -8,15 +8,18 @@ img {vertical-align: middle;}
   max-width: 1000px;
   position: relative;
   margin: auto;
+/* Caption text */
 }
 
-/* Caption text */
 .text {
-  color: #f2f2f2;
-  font-size: 15px;
+  background-image: linear-gradient(to top, #747272, #9b9b9bbe, #ffffff00);
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 24px;
   padding: 8px 12px;
   position: absolute;
-  bottom: 8px;
+  bottom: 0px;
+  height: 50px;
   width: 100%;
   text-align: center;
 }

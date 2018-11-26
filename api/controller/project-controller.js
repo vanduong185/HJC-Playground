@@ -37,7 +37,7 @@ exports.get_project = (req, res, next) => {
           }
           else {
             res.status(200).json({
-              message: "Can not found project"
+              message: "Error"
             })
           }
 
@@ -66,7 +66,7 @@ exports.get_project = (req, res, next) => {
           }
           else {
             res.status(200).json({
-              message: "Can not found project"
+              message: "Error"
             })
           }
 

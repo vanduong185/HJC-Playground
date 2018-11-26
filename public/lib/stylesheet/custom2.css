@@ -386,3 +386,8 @@
   color: red !important;
   cursor: pointer;
 }
+
+.sub-title {
+  font-size: 24px;
+  color: gray;
+}

@@ -1,3 +1,3 @@
-function log(){
-	console.log("Tuan Anh")
-}
+console.log("Hello HJC-Playground");
+console.log("I'm Duong");
+f();

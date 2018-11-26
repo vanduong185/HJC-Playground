@@ -1,6 +1,11 @@
 myApp.controller('SharedProject_ShowController', ['shared_project_data', 'ProjectAPI', '$rootScope', '$scope', '$state', '$http', '$timeout',
   function (shared_project_data, ProjectAPI, $rootScope, $scope, $state, $http, $timeout) {
 
+    if (shared_project_data.data.message == "Error") {
+      alert("Can not found this project.");
+      return;
+    }
+
     var shared_project = shared_project_data.data.shared_project;
     var data = shared_project_data.data.data;
 
