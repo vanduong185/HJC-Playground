@@ -61,12 +61,22 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
     // initialize editor with CodeMirror plugin
     var editor = CodeMirror(document.getElementById("codeeditor"), {
       mode: "htmlmixed",
-      theme: "neat",
+      // theme: "neat",
       tabSize: 2,
       lineNumbers: true,
       styleActiveLine: true,
       matchBrackets: true,
-      extraKeys: { "Ctrl-Space": "autocomplete" }
+      autoCloseTags: true,
+      autoCloseBrackets: true,
+      colorpicker : {
+        mode : 'edit'
+      },
+      extraKeys: { 
+        "Ctrl-Space": "autocomplete",
+        'Ctrl-K' : function (cm, event) {
+          cm.state.colorpicker.popup_color_picker();
+        }
+      }
     });
 
     // initialize result iframe
@@ -95,13 +105,23 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
     })
     angular.element(document.getElementById('result-iframe'))[0].src = '../data/' + project.author_id + '/' + project.project_name + '/index.html';
 
+    var refresh_iframe = function () {
+      cur_ifame = document.getElementById('result-iframe');
+      new_iframe = document.createElement('iframe');
+      new_iframe.src = cur_ifame.src;
+      new_iframe.id = cur_ifame.id;
+      new_iframe.className = cur_ifame.className;
+      new_iframe.style.height = cur_ifame.style.height;
+      cur_ifame.parentNode.replaceChild(new_iframe, cur_ifame);
+    }
+
     $scope.clearConsole = function () {
       document.getElementById("console").textContent = "";
     }
 
     $scope.refreshIframe = function() {
       $scope.clearConsole();
-      angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
+      refresh_iframe();
     }
 
     // fire event when select file or folder on tree view, set code of file for editor 
@@ -170,7 +190,6 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
           if (angular.element(
             document.getElementById("tree_1")
           ).jstree(true)._model.data[selected_file.id].original.content != text) {
-
             var data_change = {
               user_id: user_id,
               project: project,
@@ -191,7 +210,7 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
             }).then(function Success(res) {
               if (res.data.message == "Success") {
                 setTimeout(function () {
-                  angular.element(document.getElementById('result-iframe'))[0].contentWindow.location.reload();
+                  refresh_iframe();
                 }, 500) //set timeout for reloading iframe
               }
               else {
