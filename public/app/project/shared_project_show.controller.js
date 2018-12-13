@@ -57,7 +57,15 @@ myApp.controller('SharedProject_ShowController', ['shared_project_data', 'Projec
       lineNumbers: true,
       styleActiveLine: true,
       matchBrackets: true,
-      extraKeys: { "Ctrl-Space": "autocomplete" }
+      colorpicker : {
+        mode : 'edit'
+      },
+      extraKeys: { 
+        //"Ctrl-Space": "autocomplete",
+        'Ctrl-Space' : function (cm, event) {
+          cm.state.colorpicker.popup_color_picker();
+        }
+      }
     });
 
     // initialize result iframe

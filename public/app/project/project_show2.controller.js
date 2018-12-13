@@ -39,13 +39,37 @@ myApp.controller('Project_ShowController', ['project_data', 'ProjectAPI', '$root
 
   //   // initialize editor with CodeMirror plugin
     var editor = CodeMirror(document.getElementById("codeeditor"), {
-      mode: "htmlmixed",
-      theme: "neat",
+      mode: "text/html",
       tabSize: 2,
       lineNumbers: true,
       styleActiveLine: true,
       matchBrackets: true,
-      extraKeys: { "Ctrl-Space": "autocomplete" }
+      autoCloseTags: true
+      // extraKeys: { "Ctrl-Space": "autocomplete" },
+      // extraKeys: {
+      //   //"Ctrl-Space": "autocomplete",
+			// 	"'>'": function(cm) { cm.closeTag(cm, '>'); },
+			// 	"'/'": function(cm) { cm.closeTag(cm, '/'); }
+			// },
+			
+			/*
+			// extraKeys is the easier way to go, but if you need native key event processing, this should work too.
+			onKeyEvent: function(cm, e) {
+				if (e.type == 'keydown') {
+					var c = e.keyCode || e.which;
+					if (c == 190 || c == 191) {
+						try {
+							cm.closeTag(cm, c == 190 ? '>' : '/');
+							e.stop();
+							return true;
+						} catch (e) {
+							if (e != CodeMirror.Pass) throw e;
+						}
+					}
+				}
+				return false;
+			},
+			*/
     });
 
   //   // initialize result iframe
