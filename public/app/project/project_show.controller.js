@@ -8,8 +8,8 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
     }
     //aaa
     $scope.isOpenConsole = false;
-    $scope.interactConsole = function() {
-      if($scope.isOpenConsole) {
+    $scope.interactConsole = function () {
+      if ($scope.isOpenConsole) {
         document.getElementById("result-iframe").style.height = "calc(100% - 60px)";
         $scope.isOpenConsole = false;
       }
@@ -68,12 +68,12 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
       matchBrackets: true,
       autoCloseTags: true,
       autoCloseBrackets: true,
-      colorpicker : {
-        mode : 'edit'
+      colorpicker: {
+        mode: 'edit'
       },
-      extraKeys: { 
+      extraKeys: {
         "Ctrl-Space": "autocomplete",
-        'Ctrl-K' : function (cm, event) {
+        'Ctrl-K': function (cm, event) {
           cm.state.colorpicker.popup_color_picker();
         }
       }
@@ -81,27 +81,31 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
 
     // initialize result iframe
     window.addEventListener("message", function (e) {
-      let log = document.createElement("div");
-
-      if (e.data.type == "log-msg") {
-        log.className = "logger";
-        if (typeof e.data.content === "object") {
-          log.textContent = JSON.stringify(e.data.content);
+      if (~e.origin.indexOf('http://54.152.229.227:8081')) {
+        let log = document.createElement("div");
+        if (e.data.type == "log-msg") {
+          log.className = "logger";
+          if (typeof e.data.content === "object") {
+            log.textContent = JSON.stringify(e.data.content);
+          }
+          else {
+            log.textContent = e.data.content;
+          }
         }
-        else {
-          log.textContent = e.data.content;
+        if (e.data.type == "error-msg") {
+          log.className = "logger";
+          if (typeof e.data.content === "object") {
+            log.textContent = JSON.stringify(e.data.content);
+          }
+          else {
+            log.innerHTML = '<p class="margin-bot"><strong>' + e.data.position + "</strong></p>" + '<span class="red">' + e.data.content + "</span>";
+          }
         }
+        document.getElementById("console").appendChild(log);
       }
-      if (e.data.type == "error-msg") {
-        log.className = "logger";
-        if (typeof e.data.content === "object") {
-          log.textContent = JSON.stringify(e.data.content);
-        }
-        else {
-          log.innerHTML = '<p class="margin-bot"><strong>' + e.data.position + "</strong></p>" + '<span class="red">' + e.data.content + "</span>";
-        }
+      else {
+        return;
       }
-      document.getElementById("console").appendChild(log);
     })
     angular.element(document.getElementById('result-iframe'))[0].src = '../data/' + project.author_id + '/' + project.project_name + '/index.html';
 
@@ -119,7 +123,7 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
       document.getElementById("console").textContent = "";
     }
 
-    $scope.refreshIframe = function() {
+    $scope.refreshIframe = function () {
       $scope.clearConsole();
       refresh_iframe();
     }
@@ -338,7 +342,7 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
 
     //fire event delete a file or a folder
     $scope.showDeleteModal = function () {
-      $ngBootbox.confirm('Are you sure delete this file/folder ?').then(function() {
+      $ngBootbox.confirm('Are you sure delete this file/folder ?').then(function () {
         $scope.delete();
       });
     }
