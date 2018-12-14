@@ -51,20 +51,15 @@ myApp.controller('SharedProject_ShowController', ['shared_project_data', 'Projec
     // initialize editor with CodeMirror plugin
     var editor = CodeMirror(document.getElementById("codeeditor"), {
       mode: "htmlmixed",
-      theme: "neat",
+      //theme: "neat",
       readOnly: true,
       tabSize: 2,
       lineNumbers: true,
       styleActiveLine: true,
       matchBrackets: true,
-      colorpicker : {
-        mode : 'edit'
-      },
+      colorpicker : true,
       extraKeys: { 
-        //"Ctrl-Space": "autocomplete",
-        'Ctrl-Space' : function (cm, event) {
-          cm.state.colorpicker.popup_color_picker();
-        }
+        "Ctrl-Space": "autocomplete"
       }
     });
 

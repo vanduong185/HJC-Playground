@@ -6,6 +6,7 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
       alert("Can not found this project.");
       return;
     }
+
     //aaa
     $scope.isOpenConsole = false;
     $scope.interactConsole = function () {
@@ -36,6 +37,7 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
 
     $scope.dicrectory_link = "#/projects/" + project.project_id + "#directory";
     $scope.library_link = "#/projects/" + project.project_id + "#library";
+    $scope.hint_link = "#/projects/" + project.project_id + "#hint";
 
     // initialize treeview with jsTree plugin  
     data.state = { opened: true };
@@ -80,35 +82,10 @@ myApp.controller('Project_ShowController', ['project_data', 'libraries_data', 'P
     });
 
     // initialize result iframe
-    window.addEventListener("message", function (e) {
-      if (~e.origin.indexOf('http://54.152.229.227:8081')) {
-        let log = document.createElement("div");
-        if (e.data.type == "log-msg") {
-          log.className = "logger";
-          if (typeof e.data.content === "object") {
-            log.textContent = JSON.stringify(e.data.content);
-          }
-          else {
-            log.textContent = e.data.content;
-          }
-        }
-        if (e.data.type == "error-msg") {
-          log.className = "logger";
-          if (typeof e.data.content === "object") {
-            log.textContent = JSON.stringify(e.data.content);
-          }
-          else {
-            log.innerHTML = '<p class="margin-bot"><strong>' + e.data.position + "</strong></p>" + '<span class="red">' + e.data.content + "</span>";
-          }
-        }
-        document.getElementById("console").appendChild(log);
-      }
-      else {
-        return;
-      }
-    })
+    
+    // window.addEventListener("message", renderConsole, false);
+    // window.removeEventListener("message", renderConsole, false);
     angular.element(document.getElementById('result-iframe'))[0].src = '../data/' + project.author_id + '/' + project.project_name + '/index.html';
-
     var refresh_iframe = function () {
       cur_ifame = document.getElementById('result-iframe');
       new_iframe = document.createElement('iframe');

@@ -31,6 +31,7 @@ myApp.controller('Playground_GuestController', ['guest_project_data', 'libraries
 
     $scope.dicrectory_link = "#/playground/guest#directory";
     $scope.library_link = "#/playground/guest#library";
+    $scope.hint_link = "#/playground/guest#hint";
 
     // initialize treeview with jsTree plugin 
     data.text = "guest";
@@ -56,38 +57,29 @@ myApp.controller('Playground_GuestController', ['guest_project_data', 'libraries
     // initialize editor with CodeMirror plugin
     var editor = CodeMirror(document.getElementById("codeeditor"), {
       mode: "htmlmixed",
-      theme: "neat",
+      //theme: "neat",
       tabSize: 2,
       lineNumbers: true,
       styleActiveLine: true,
       matchBrackets: true,
-      extraKeys: { "Ctrl-Space": "autocomplete" }
+      autoCloseTags: true,
+      autoCloseBrackets: true,
+      colorpicker: {
+        mode: 'edit'
+      },
+      extraKeys: {
+        "Ctrl-Space": "autocomplete",
+        'Ctrl-K': function (cm, event) {
+          cm.state.colorpicker.popup_color_picker();
+        }
+      }
     });
 
     // initialize result iframe
-    window.addEventListener("message", function (e) {
-      let log = document.createElement("div");
-
-      if (e.data.type == "log-msg") {
-        log.className = "logger";
-        if (typeof e.data.content === "object") {
-          log.textContent = JSON.stringify(e.data.content);
-        }
-        else {
-          log.textContent = e.data.content;
-        }
-      }
-      if (e.data.type == "error-msg") {
-        log.className = "logger";
-        if (typeof e.data.content === "object") {
-          log.textContent = JSON.stringify(e.data.content);
-        }
-        else {
-          log.innerHTML = '<p class="margin-bot"><strong>' + e.data.position + "</strong></p>" + '<span class="red">' + e.data.content + "</span>";
-        }
-      }
-      document.getElementById("console").appendChild(log);
-    })
+    
+    // window.removeEventListener("message", renderConsole, false);
+    // window.addEventListener("message", renderConsole, false);
+    // window.removeEventListener("message", renderConsole, false);
     angular.element(document.getElementById('result-iframe'))[0].src = '../data/guest/' + guest_project + '/index.html';
 
     $scope.clearConsole = function () {
