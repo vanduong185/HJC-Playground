@@ -1,0 +1,9 @@
+html,body {
+  height: 100%;
+  overflow: hidden;
+  background-color: rgba(221, 221, 221, .25);
+}
+
+canvas {
+  display: block;
+}

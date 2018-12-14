@@ -1,0 +1,115 @@
+<div class="row" style="height: calc(100vh - 100px); background-color: #eee; margin: 0px">
+  <div class="col-md-3 col-sm-3 no-padding" style="height: 100%; background-color: #fff; border-right: black; border-width: 1px;">
+    <div class="row no-margin" style="height: 100%;">
+      <div class="col-md-2 col-sm-2 col-xs-2 no-padding" style="height: 100%;">
+        <ul class="nav nav-tabs tabs-left" style="height: 100%; background-color: #f1f3fa">
+          <li class="active">
+            <a href='{{dicrectory_link}}' data-toggle="tab" aria-expanded="true" title="directory"> <i class="fa fa-files-o"></i> </a>
+          </li>
+          <li>
+            <a href="{{library_link}}" data-toggle="tab" aria-expanded="false" title="library"><i class="fa fa-book"></i></a>
+          </li>
+          <li>
+            <a href="{{hint_link}}" data-toggle="tab" aria-expanded="false" title="hint"><i class="fa fa-lightbulb-o"></i></a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-10 col-sm-10 col-xs-10 no-padding" style="height: 100%;">
+        <div class="tab-content" style="height: 100%;">
+          <div class="tab-pane active" id="directory" name="directory" style="height: 100%;">
+            <div class="portlet light no-margin padding-10px" style="height: 100%;">
+              <div class="portlet-title">
+                <div class="actions">
+                  <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="new folder" ng-click="newFolder()">
+                    <i class="fa fa-folder-o gray"></i>
+                  </a>
+                  <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="new file" ng-click="newFile()">
+                    <i class="fa fa-file-code-o gray"></i>
+                  </a>
+                  <a id="delete-btn" class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="delete"
+                    ng-click="showDeleteModal()">
+                    <i class="fa fa-trash-o gray"></i>
+                  </a>
+                  <a id="rename-btn" class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="rename"
+                    ng-click="rename()">
+                    <i class="fa fa fa-edit gray"></i>
+                  </a>
+                </div>
+              </div>
+              <div class="portlet-body" style="min-height: calc(100% - 58px); overflow: auto;">
+                <div id="tree_1" class="tree-demo">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="library" name="library" style="height: 100%; padding: 10px">
+            <div style="height: 25px ;display: flex; flex-direction: row; justify-content: center; margin-bottom: 30px">
+              <input type="text" 
+                style="border: 1px solid #f3a677;
+                  height: 25px;
+                  width: calc(100% - 25px);
+                  padding: 5px 10px;" 
+                ng-model="keyword" ng-keyup="$event.which == 13 ? searchLibrary() : null"
+                placeholder="Search library...">
+              <button class="btn" type="button" 
+                style="background-color: #f3a677;
+                  height: 25px;
+                  padding: 0px 5px;
+                  color: #fff;" 
+                ng-click="searchLibrary()"><i class="fa fa-search"></i></button>             
+            </div>
+            <div style="height: calc(100% - 55px) ; overflow: auto">
+              <div ng-repeat="lib in libraries" class="library-item">
+                <p class="margin-bot"><strong>{{lib.name}}</strong></p>
+                <span>{{lib.latest}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="hint" name="hint" style="height: 100%; padding: 10px">
+            <div style="height: 30px ;display: flex; flex-direction: row; justify-content: center; margin-bottom: 30px">
+              <h2>HINT</h2>
+            </div>
+            <div style="height: calc(100% - 60px) ; overflow: auto">
+              <div style="margin: 10px 0px">
+                <strong>1.</strong><p style="margin: 5px 0px 20px">"index.html" and "config.html" are important. Please, don't delete them.</p>
+              </div>
+              <div style="margin: 10px 0px">
+                <strong>2.</strong><p style="margin: 5px 0px 20px">Press Ctrl + Space to autocomplete code and show suggestion.</p>
+              </div>
+              <div style="margin: 10px 0px">
+                <strong>3.</strong><p style="margin: 5px 0px 20px">Press Ctrl + K to open colorpicker.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-5 col-sm-5 no-padding" style="height: 100%; border-right: black; border-width: 1px">
+    <div class="editor-tabs" style="height: calc(100% - 6px); box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.24); margin: 3px">
+      <div style="height: 30px; background-color: #ddd; color: black; font-size: 14px; padding: 5px 10px;">
+        <span id="filename"></span>
+      </div>
+      <div id="codeeditor" style="height: calc(100% - 30px);"></div>
+    </div>
+  </div>
+  <div class="col-md-4 col-sm-4 no-padding" style="height: 100%;">
+    <div style="height: calc(100% - 6px); box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.24); margin: 3px">
+      <div style="height: 30px; background-color: #ddd; color: black; font-size: 14px; padding: 5px 10px;">
+        Preview
+        <i ng-click="refreshIframe()" class="fa fa-refresh pull-right" style="line-height: 20px; color: gray; cursor: pointer"></i>
+      </div>
+      <iframe id="result-iframe" style="height: calc(100% - 60px)" class="result-iframe"></iframe>
+      <div style="height: 30px; background-color: #ddd; color: black; font-size: 14px; padding: 5px 10px; margin-top: -3px">
+        <span class="console-label" ng-click="interactConsole()">
+          Console
+        </span>
+        <i ng-click="clearConsole()" class="fa fa-undo pull-right" style="line-height: 20px; color: gray; cursor: pointer"></i>
+      </div>
+      <div ng-show="isOpenConsole">
+        <div id="console" style="height: 140px; padding: 10px; overflow: auto; background-color: black; color: #fff">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

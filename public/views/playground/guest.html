@@ -1,0 +1,70 @@
+<div class="row widget-row editor">
+  <div class="col-sm-3 col-md-3 margin-bottom-20">
+    <div class="editor-treview">
+      <div class="portlet light">
+        <div class="portlet-title">
+          <div class="save-project">
+            <button class="btn blue bold btn-hover-shadow" ng-click="saveProject()">Save</button>
+          </div>
+          <div class="actions">
+            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="new folder" ng-click="newFolder()">
+              <i class="fa fa-folder-o gray"></i>
+            </a>
+            <a class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="new file" ng-click="newFile()">
+              <i class="fa fa-file-code-o gray"></i>
+            </a>
+            <a id="delete-btn" class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="delete" ng-click="showDeleteModal()">
+              <i class="fa fa-trash-o gray"></i>
+            </a>
+            <a id="rename-btn" class="btn btn-circle btn-icon-only btn-default" href="javascript:;" title="rename" ng-click="rename()">
+              <i class="fa fa fa-edit gray"></i>
+            </a>
+          </div>
+        </div>
+        <div class="portlet-body">
+          <div id="tree_1" class="tree-demo">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-6 margin-bottom-20">
+    <div class="editor-tabs">
+      <div id="codeeditor"></div>
+    </div>
+  </div>
+  <div class="col-sm-3 col-md-3 margin-bottom-20">
+    <div class="library">
+      <div class="m-header">
+        <div class="input-group">
+          <input type="text" class="form-control" ng-model="keyword" placeholder="Search library...">
+          <span class="input-group-btn">
+            <button class="btn blue bold" type="button" ng-click="searchLibrary()">Search</button>
+          </span>
+        </div>
+      </div>
+      <div class="m-content">
+        <div ng-repeat="lib in libraries" class="library-item">
+          <p><strong>{{lib.name}}</strong></p>
+          <span>{{lib.latest}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row widget-row">
+  <div class="col-md-9 result-panel margin-bottom-20">
+    <iframe id="result-iframe" class="result-iframe"></iframe>
+  </div>
+  <div class="col-md-3 margin-bottom-20">
+    <div class="console-panel">
+      <div class="m-header">
+        <span class="m-header-title bold uppercase blue">Console</span>
+        <button class="m-header-action btn blue bold btn-hover-shadow" type="button" ng-click="clearConsole()">Clear</button>
+      </div>
+      <div class="m-content" id="console">
+
+      </div>
+    </div>
+  </div>
+</div>

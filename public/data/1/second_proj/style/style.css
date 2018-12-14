@@ -1,0 +1,10 @@
+html, body {
+	height: 100%;
+  background-color: rgb(49,55,55);
+}
+
+.title {
+	text-align: center;
+  color: #03A9F4;
+  font-size: 40px;
+}

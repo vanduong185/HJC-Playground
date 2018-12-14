@@ -1,0 +1,50 @@
+<div ng-controller="HeaderController" class="page-header navbar-fixed-top">
+  <div class="clearfix">
+    <!-- BEGIN LOGO -->
+    <div class="page-logo padding-left-30px">
+      <a href="#" ui-sref="home">
+        <img src="../lib/images/logo-3.png" alt="logo" class="logo-default" />
+      </a>
+    </div>
+    <!-- END LOGO -->
+    <!-- BEGIN TOP NAVIGATION MENU -->
+    <div class="top-menu" style="padding-top: 12px">
+      <ul class="nav navbar-nav pull-right align-center">
+        <li>
+          <button ui-sref="playground.guest" class="btn btn-md btn-create">Create</button>
+        </li>
+        <li ng-if="globals.currentUserInfo">
+          <button ui-sref="projects.dashboard.list" class="btn btn-md btn-login">My Projects</button>
+        </li>
+        <li ng-if="globals.currentUserInfo">
+          <button ng-if="globals.currentUserInfo.isAdmin == 1" ui-sref="users.list_user" class="btn btn-md btn-admin">Admin</button>
+        </li>
+        <li ng-if="globals.currentUserInfo" class="dropdown dropdown-user">
+          <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true"
+            style="padding: 0px">
+            <div class="dropdown-user-inner">
+              <span class="username username-hide-on-mobile"> {{globals.currentUserInfo.nickname}} </span>
+              <img alt="" ng-src="{{globals.currentUserInfo.avatar || 'lib/images/avatar.png'}}">
+            </div>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-default">
+            <li>
+              <a ui-sref="profile">
+                <i class="icon-user"></i> My Profile </a>
+            </li>
+            <li>
+              <a href="#" ng-click="logout()">
+                <i class="icon-key"></i> Log Out </a>
+            </li>
+          </ul>
+        </li>
+        <li ng-if="!globals.currentUser">
+          <a ng-click="showLoginModal()" class="menubar-center">
+            <button class="btn btn-md btn-login">Log In</button>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <!-- END TOP NAVIGATION MENU -->
+  </div>
+</div>

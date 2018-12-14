@@ -1,0 +1,58 @@
+<div class="row" style="height: calc(100vh - 100px); background-color: #eee; margin: 0px">
+  <div class="col-md-3 col-sm-3 no-padding" style="height: 100%; background-color: #fff; border-right: black; border-width: 1px;">
+    <div class="row no-margin" style="height: 100%;">
+      <div class="col-md-2 col-sm-2 col-xs-2 no-padding" style="height: 100%;">
+        <ul class="nav nav-tabs tabs-left" style="height: 100%; background-color: #f1f3fa">
+          <li class="active">
+            <a href='{{dicrectory_link}}' data-toggle="tab" aria-expanded="true"> <i class="fa fa-files-o"></i> </a>
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-10 col-sm-10 col-xs-10 no-padding" style="height: 100%;">
+        <div class="tab-content" style="height: 100%;">
+          <div class="tab-pane active" id="directory" name="directory" style="height: 100%;">
+            <div class="portlet light no-margin padding-10px">
+              <div class="portlet-title">
+                <div class="caption">
+                  <i class="fa fa-user margin-rigth-10px"></i>
+                  <span class="caption-subject blue bold">{{shared_project.author_email}}</span>
+                </div>
+              </div>
+              <div class="portlet-body">
+                <div id="tree_1" class="tree-demo">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-5 col-sm-5 no-padding" style="height: 100%; border-right: black; border-width: 1px">
+    <div class="editor-tabs" style="height: calc(100% - 6px); box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.24); margin: 3px">
+      <div style="height: 30px; background-color: #ddd; color: black; font-size: 14px; padding: 5px 10px;">
+        <span id="filename"></span>
+      </div>
+      <div id="codeeditor" style="height: calc(100% - 30px);"></div>
+    </div>
+  </div>
+  <div class="col-md-4 col-sm-4 no-padding" style="height: 100%;">
+    <div style="height: calc(100% - 6px); box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.24); margin: 3px">
+      <div style="height: 30px; background-color: #ddd; color: black; font-size: 14px; padding: 5px 10px;">
+        Preview
+        <i ng-click="refreshIframe()" class="fa fa-refresh pull-right" style="line-height: 20px; color: gray; cursor: pointer"></i>
+      </div>
+      <iframe id="result-iframe" style="height: calc(100% - 60px)" class="result-iframe"></iframe>
+      <div style="height: 30px; background-color: #ddd; color: black; font-size: 14px; padding: 5px 10px; margin-top: -3px">
+        <span class="console-label" ng-click="interactConsole()">
+          Console
+        </span>
+        <i ng-click="clearConsole()" class="fa fa-undo pull-right" style="line-height: 20px; color: gray; cursor: pointer"></i>
+      </div>
+      <div ng-show="isOpenConsole">
+        <div id="console" style="height: 140px; padding: 10px; overflow: auto; background-color: black; color: #fff">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
