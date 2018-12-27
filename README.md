@@ -24,7 +24,8 @@
   ---- Yêu cầu: nodejs, npm, mysql.
 
   - git clone https://github.com/vanduong185/HJC-Playground
+  - Xoá package-lock.json
   - npm install
   - Vào file hjc_db.js tùy chỉnh cấu hình Mysql của bạn.
-  - Trong Mysql tạo cơ sở dữ liệu hjc_playround, sau đó import file hjc_playground.sql vào cơ sở dữ liệu vừa tạo.
+  - Trong Mysql tạo cơ sở dữ liệu hjc_playground, sau đó import file hjc_playground.sql vào cơ sở dữ liệu vừa tạo.
   - npm start
